@@ -1,0 +1,118 @@
+## Single-Step Routes (4 combinations)
+
+1. model_collection
+   Path: model_collection
+   Actions: searchModels → getModelMetadata → rankResults
+   Data: model_list, model_metadata
+   Description: Direct AI model search and collection
+
+2. dataset_collection
+   Path: dataset_collection
+   Actions: searchDatasets → getDatasetMetadata → rankResults
+   Data: dataset_list, dataset_metadata
+   Description: Direct dataset search and collection
+
+3. web_search
+   Path: web_search
+   Actions: searchWeb → filterResults → rankResults
+   Data: web_results, filtered_content
+   Description: Web search for current information
+
+4. research
+   Path: research
+   Actions: searchPapers → getPaperContent → filterByRelevance
+   Data: paper_list, paper_metadata
+   Description: Academic papers from arXiv
+
+## Two-Step Routes (5 combinations)
+
+5. research → analysis
+   Path: research → analysis
+   Actions: searchPapers → getPaperContent → analyzeData → synthesizeResults
+   Data: paper_list, paper_content, research_analysis
+   Description: Academic research with insights analysis
+
+6. web_search → analysis
+   Path: web_search → analysis
+   Actions: searchWeb → filterResults → analyzeData → synthesizeResults
+   Data: web_results, filtered_content, web_analysis
+   Description: Web search with content analysis
+
+7. author → research
+   Path: author → research
+   Actions: searchPerson → getPersonPubs → getPaperContent → rankResults
+   Data: author_info, paper_list, paper_content
+   Description: Find research papers by specific author
+
+8. author → model_collection
+   Path: author → model_collection
+   Actions: searchPerson → getPersonModels → getModelMetadata → rankResults
+   Data: author_info, model_list, model_metadata
+   Description: Find models by specific author
+
+9. huggingface → data_collection
+   Path: huggingface → data_collection
+   Actions: searchModels → searchDatasets → getModelMetadata → getDatasetMetadata → synthesizeResults
+   Data: model_list, dataset_list, combined_metadata
+   Description: Comprehensive HuggingFace resource search
+
+## Platform-Specific Routes 
+
+10. huggingface → model_collection
+    Path: huggingface → model_collection
+    Actions: searchModels → getModelMetadata → rankResults
+    Data: model_list, model_metadata
+    Description: Search HuggingFace model repository
+
+11. huggingface → dataset_collection
+    Path: huggingface → dataset_collection
+    Actions: searchDatasets → getDatasetMetadata → rankResults
+    Data: dataset_list, dataset_metadata
+    Description: Search HuggingFace dataset repository
+
+## Multi-Step Complex Routes 
+
+12. author → model_collection → research → analysis
+    Path: author → model_collection → research → analysis
+    Actions: searchPerson → getPersonModels → getPersonPubs → analyzeData → synthesizeResults
+    Data: author_info, model_list, paper_list, comprehensive_analysis
+    Description: Comprehensive analysis of author's contributions
+
+13. data_collection → research → analysis
+    Path: data_collection → research → analysis
+    Actions: searchModels → searchDatasets → searchPapers → comprehensiveAnalysis
+    Data: models, datasets, papers, full_analysis
+    Description: Complete AI ecosystem analysis
+
+## Action Sequence Examples
+
+### Person-Centric Actions
+- searchPerson → getPersonModels → getModelMetadata
+- searchPerson → getPersonPubs → getPaperContent
+- searchPerson → getCoauthors → getCoauthors
+
+### Resource Discovery Actions
+- searchModels → getModelMetadata → rankResults
+- searchDatasets → getDatasetMetadata → filterResults
+- searchPapers → getPaperContent → analyzeData
+
+### Analysis Actions
+- searchWeb → filterResults → synthesizeResults
+- searchModels → searchDatasets → comprehensiveAnalysis
+
+## Coverage Statistics
+- Total Routes: 13 combinations
+- Single-step: 4 routes (31%)
+- Two-step: 5 routes (38%)
+- Multi-step: 4 routes (31%)
+- Platforms: HuggingFace + arXiv + Web (100%)
+- Data Types: Models, Datasets, Papers, Web (100%)
+- Analysis Depth: Basic → Comprehensive (100%)
+
+## Query Pattern Examples
+- "Find XXX by YYY for ZZZ task" → author routes
+- "XXX datasets for YYY task" → dataset_collection
+- "Best XXX models on YYY platform" → model_collection
+- "Latest XXX research" → research routes
+- "Comprehensive analysis of XXX" → multi-step routes
+- "What's new in XXX" → web_search routes
