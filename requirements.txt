@@ -1,0 +1,8 @@
+# Essential dependencies for Tool Learning Chatbot
+streamlit>=1.28.0
+
+# Paper scraping (optional - comment out if not needed)
+paperscraper>=0.2.0
+
+# Ollama API client
+requests>=2.31.0 

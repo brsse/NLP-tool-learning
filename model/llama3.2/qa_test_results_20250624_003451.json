@@ -1,0 +1,1330 @@
+{
+  "metadata": {
+    "test_timestamp": "2025-06-24T00:34:51.107868",
+    "total_test_cases": 70,
+    "engine_routes": [
+      "searchPapers",
+      "getAuthorInfo",
+      "getCitations",
+      "getRelatedPapers",
+      "comparePapers",
+      "trendAnalysis",
+      "journalAnalysis"
+    ],
+    "test_type": "comprehensive_qa_evaluation",
+    "qa_statistics": {
+      "total_cases": 70,
+      "single_route_cases": 66,
+      "multi_route_cases": 4,
+      "route_distribution": {
+        "searchPapers": 23,
+        "getAuthorInfo": 15,
+        "getCitations": 10,
+        "comparePapers": 8,
+        "trendAnalysis": 6,
+        "journalAnalysis": 3,
+        "getRelatedPapers": 5
+      },
+      "difficulty_distribution": {
+        "easy": 12,
+        "medium": 33,
+        "hard": 25
+      },
+      "category_distribution": {
+        "basic_search": 4,
+        "temporal_search": 1,
+        "review_search": 1,
+        "technical_search": 3,
+        "domain_search": 3,
+        "specific_search": 3,
+        "specialized_search": 5,
+        "author_search": 9,
+        "author_info": 6,
+        "citation_query": 4,
+        "impact_query": 3,
+        "metric_analysis": 1,
+        "bibliometric": 1,
+        "citation_analysis": 1,
+        "model_comparison": 3,
+        "architecture_comparison": 2,
+        "method_comparison": 2,
+        "domain_comparison": 1,
+        "domain_trends": 4,
+        "model_trends": 1,
+        "journal_metrics": 1,
+        "venue_recommendation": 1,
+        "domain_venue": 1,
+        "related_work": 3,
+        "multi_route_complex": 2,
+        "multi_route_analysis": 1,
+        "multi_route_temporal": 1,
+        "ambiguous": 2
+      },
+      "source_distribution": {
+        "arXiv": 28,
+        "Scholar": 7,
+        "PubMed": 5,
+        "bioRxiv": 16,
+        "medRxiv": 9,
+        "chemRxiv": 7,
+        "general": 5,
+        "multiple": 3
+      }
+    }
+  },
+  "overall_results": {
+    "total_tests": 70,
+    "correct_routes": 59,
+    "accuracy": 0.8428571428571429
+  },
+  "detailed_results": [
+    {
+      "test_id": 1,
+      "query": "find papers about machine learning",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 7.0 for search for research papers (keyword boost: +2)",
+      "expected_answer": "Found several influential machine learning papers including 'Attention Is All You Need' (2017) and BERT (2018).",
+      "difficulty": "easy",
+      "category": "basic_search",
+      "sources": [
+        "arXiv",
+        "Scholar",
+        "PubMed"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 2,
+      "query": "search for research on deep learning",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 6.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Deep learning research includes foundational works and recent advances in neural networks.",
+      "difficulty": "easy",
+      "category": "basic_search",
+      "sources": [
+        "arXiv",
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 3,
+      "query": "get papers on natural language processing",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 6.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "NLP papers include GPT-3, BERT, and clinical language processing applications.",
+      "difficulty": "easy",
+      "category": "basic_search",
+      "sources": [
+        "arXiv",
+        "medRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 4,
+      "query": "look for computer vision articles",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.5,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 3.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Computer vision papers include YOLO, ResNet, and biological image analysis.",
+      "difficulty": "easy",
+      "category": "basic_search",
+      "sources": [
+        "arXiv",
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 5,
+      "query": "recent papers on transformers",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 5.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Recent transformer research spans multiple domains including NLP and computer vision.",
+      "difficulty": "medium",
+      "category": "temporal_search",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 6,
+      "query": "literature review on neural networks",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.5,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 2.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Neural network literature includes comprehensive surveys and biological applications.",
+      "difficulty": "medium",
+      "category": "review_search",
+      "sources": [
+        "Scholar",
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 7,
+      "query": "papers about attention mechanisms",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 5.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Attention mechanism papers focus on transformer architectures and their applications.",
+      "difficulty": "medium",
+      "category": "technical_search",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 8,
+      "query": "find research on object detection",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 7.0 for search for research papers (keyword boost: +2)",
+      "expected_answer": "Object detection research includes YOLO and other real-time detection methods.",
+      "difficulty": "medium",
+      "category": "technical_search",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 9,
+      "query": "search for pre-training papers",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.0 for search for research papers (keyword boost: +2)",
+      "expected_answer": "Pre-training papers include BERT, RoBERTa, and GPT models.",
+      "difficulty": "medium",
+      "category": "technical_search",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 10,
+      "query": "medical AI research papers",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.0 for search for research papers (keyword boost: +2)",
+      "expected_answer": "Medical AI papers include clinical applications and diagnostic tools.",
+      "difficulty": "medium",
+      "category": "domain_search",
+      "sources": [
+        "medRxiv",
+        "PubMed"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 11,
+      "query": "biological machine learning papers",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.041666666666666664,
+      "correct": true,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Biological ML papers include protein folding and cell analysis applications.",
+      "difficulty": "medium",
+      "category": "domain_search",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 12,
+      "query": "chemistry AI publications",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "Chemistry AI includes catalyst design and molecular property prediction.",
+      "difficulty": "medium",
+      "category": "domain_search",
+      "sources": [
+        "chemRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 13,
+      "query": "COVID-19 detection papers",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.041666666666666664,
+      "correct": true,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "COVID-19 detection papers focus on imaging and diagnostic approaches.",
+      "difficulty": "medium",
+      "category": "specific_search",
+      "sources": [
+        "medRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 14,
+      "query": "protein folding prediction research",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.041666666666666664,
+      "correct": true,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Protein folding research combines AI with biological constraints.",
+      "difficulty": "medium",
+      "category": "specific_search",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 15,
+      "query": "catalyst design machine learning",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "Catalyst design uses ML for predicting performance and optimizing reactions.",
+      "difficulty": "medium",
+      "category": "specific_search",
+      "sources": [
+        "chemRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 16,
+      "query": "single-cell RNA sequencing analysis",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "scRNA-seq analysis uses deep learning for cellular heterogeneity studies.",
+      "difficulty": "hard",
+      "category": "specialized_search",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 17,
+      "query": "precision medicine AI applications",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "Precision medicine AI focuses on treatment response prediction.",
+      "difficulty": "hard",
+      "category": "specialized_search",
+      "sources": [
+        "medRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 18,
+      "query": "quantum chemistry machine learning",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "Quantum chemistry ML combines quantum calculations with property prediction.",
+      "difficulty": "hard",
+      "category": "specialized_search",
+      "sources": [
+        "chemRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 19,
+      "query": "drug discovery AI pipelines",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "AI drug discovery focuses on protein-compound interaction prediction.",
+      "difficulty": "hard",
+      "category": "specialized_search",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 20,
+      "query": "automated cell analysis computer vision",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "Automated cell analysis uses computer vision for segmentation and classification.",
+      "difficulty": "hard",
+      "category": "specialized_search",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 21,
+      "query": "papers by Yoshua Bengio",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 9.0 for get information about authors",
+      "expected_answer": "Yoshua Bengio co-authored the foundational 'Deep Learning' textbook (2016).",
+      "difficulty": "easy",
+      "category": "author_search",
+      "sources": [
+        "Scholar"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 22,
+      "query": "who is Geoffrey Hinton",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.017857142857142856,
+      "correct": true,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for get information about authors (keyword boost: +1)",
+      "expected_answer": "Geoffrey Hinton is a pioneering researcher in neural networks and deep learning.",
+      "difficulty": "easy",
+      "category": "author_info",
+      "sources": [
+        "general"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 23,
+      "query": "research by Ian Goodfellow",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 9.0 for get information about authors",
+      "expected_answer": "Ian Goodfellow co-authored the 'Deep Learning' textbook and invented GANs.",
+      "difficulty": "easy",
+      "category": "author_search",
+      "sources": [
+        "Scholar"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 24,
+      "query": "author profile for Ashish Vaswani",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 8.0 for get information about authors (keyword boost: +2)",
+      "expected_answer": "Ashish Vaswani is the lead author of the foundational Transformer paper.",
+      "difficulty": "medium",
+      "category": "author_info",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 25,
+      "query": "publications of Yann LeCun",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.5,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 3.0 for get information about authors",
+      "expected_answer": "Yann LeCun is a pioneer in convolutional neural networks.",
+      "difficulty": "easy",
+      "category": "author_search",
+      "sources": [
+        "general"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 26,
+      "query": "tell me about Jacob Devlin",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": false,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "Jacob Devlin is the lead author of BERT.",
+      "difficulty": "medium",
+      "category": "author_info",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 27,
+      "query": "researcher Andrew Ng background",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for get information about authors (keyword boost: +1)",
+      "expected_answer": "Andrew Ng is a prominent ML researcher and educator.",
+      "difficulty": "medium",
+      "category": "author_info",
+      "sources": [
+        "general"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 28,
+      "query": "works by Kaiming He",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 9.0 for get information about authors",
+      "expected_answer": "Kaiming He is the lead author of ResNet.",
+      "difficulty": "medium",
+      "category": "author_search",
+      "sources": [
+        "Scholar"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 29,
+      "query": "author information for Tom Brown",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for get information about authors (keyword boost: +1)",
+      "expected_answer": "Tom Brown led the development of GPT-3.",
+      "difficulty": "medium",
+      "category": "author_info",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 30,
+      "query": "scientist Joseph Redmon profile",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "getAuthorInfo",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 5.0 for get information about authors (keyword boost: +2)",
+      "expected_answer": "Joseph Redmon created YOLO object detection system.",
+      "difficulty": "medium",
+      "category": "author_info",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 31,
+      "query": "Dr. Jennifer Liu publications",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": false,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "Dr. Jennifer Liu published COVID-19 diagnostic imaging research.",
+      "difficulty": "hard",
+      "category": "author_search",
+      "sources": [
+        "medRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 32,
+      "query": "Prof. Elena Rodriguez research",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "searchPapers",
+      "confidence": 0.041666666666666664,
+      "correct": false,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Dr. Elena Rodriguez works on neural networks for protein folding.",
+      "difficulty": "hard",
+      "category": "author_search",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 33,
+      "query": "Dr. Rebecca Taylor chemistry papers",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "searchPapers",
+      "confidence": 0.041666666666666664,
+      "correct": false,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Dr. Rebecca Taylor researches ML for catalyst design.",
+      "difficulty": "hard",
+      "category": "author_search",
+      "sources": [
+        "chemRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 34,
+      "query": "researcher Maria Gonzalez NLP",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": false,
+      "explanation": "Matched 2 pattern(s) with score 5.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Dr. Maria Gonzalez works on clinical NLP for mental health.",
+      "difficulty": "hard",
+      "category": "author_search",
+      "sources": [
+        "PubMed"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 35,
+      "query": "Prof. Anna Kowalski single-cell research",
+      "expected_route": "getAuthorInfo",
+      "predicted_route": "searchPapers",
+      "confidence": 0.041666666666666664,
+      "correct": false,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for search for research papers (keyword boost: +1)",
+      "expected_answer": "Dr. Anna Kowalski develops deep learning for scRNA-seq analysis.",
+      "difficulty": "hard",
+      "category": "author_search",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 36,
+      "query": "citation count for BERT paper",
+      "expected_route": "getCitations",
+      "predicted_route": "getCitations",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for get citation information (keyword boost: +1)",
+      "expected_answer": "BERT has 45,123 citations, making it highly influential in NLP.",
+      "difficulty": "easy",
+      "category": "citation_query",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 37,
+      "query": "how many citations does ResNet have",
+      "expected_route": "getCitations",
+      "predicted_route": "getCitations",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for get citation information (keyword boost: +1)",
+      "expected_answer": "ResNet has 89,234 citations in computer vision.",
+      "difficulty": "easy",
+      "category": "citation_query",
+      "sources": [
+        "Scholar"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 38,
+      "query": "impact factor of transformer paper",
+      "expected_route": "getCitations",
+      "predicted_route": "journalAnalysis",
+      "confidence": 0.7,
+      "correct": false,
+      "explanation": "Matched 1 pattern(s) with score 4.0 for analyze journals and venues",
+      "expected_answer": "The Transformer paper has 70,245 citations and tremendous impact.",
+      "difficulty": "medium",
+      "category": "impact_query",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 39,
+      "query": "cited count for GPT-3 publication",
+      "expected_route": "getCitations",
+      "predicted_route": "getCitations",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 5.0 for get citation information (keyword boost: +2)",
+      "expected_answer": "GPT-3 has 25,486 citations despite being relatively recent.",
+      "difficulty": "medium",
+      "category": "citation_query",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 40,
+      "query": "h-index analysis for deep learning papers",
+      "expected_route": "getCitations",
+      "predicted_route": "getCitations",
+      "confidence": 0.5,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 3.5 for get citation information (keyword boost: +1)",
+      "expected_answer": "Deep learning papers show high citation counts with Transformer and BERT leading.",
+      "difficulty": "hard",
+      "category": "metric_analysis",
+      "sources": [
+        "multiple"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 41,
+      "query": "bibliometric study of YOLO paper",
+      "expected_route": "getCitations",
+      "predicted_route": "getCitations",
+      "confidence": 0.5,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 3.0 for get citation information",
+      "expected_answer": "YOLO has 34,567 citations and influenced object detection research.",
+      "difficulty": "medium",
+      "category": "bibliometric",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 42,
+      "query": "citation analysis for RoBERTa",
+      "expected_route": "getCitations",
+      "predicted_route": "getCitations",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 7.5 for get citation information (keyword boost: +1)",
+      "expected_answer": "RoBERTa has 15,234 citations demonstrating training optimization importance.",
+      "difficulty": "medium",
+      "category": "citation_analysis",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 43,
+      "query": "COVID-19 paper citation impact",
+      "expected_route": "getCitations",
+      "predicted_route": "searchPapers",
+      "confidence": 0.5,
+      "correct": false,
+      "explanation": "Matched 1 pattern(s) with score 3.0 for search for research papers",
+      "expected_answer": "COVID-19 diagnostic papers show rapid citation accumulation.",
+      "difficulty": "medium",
+      "category": "impact_query",
+      "sources": [
+        "medRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 44,
+      "query": "protein folding paper citations",
+      "expected_route": "getCitations",
+      "predicted_route": "searchPapers",
+      "confidence": 0.5,
+      "correct": false,
+      "explanation": "Matched 1 pattern(s) with score 3.0 for search for research papers",
+      "expected_answer": "Protein folding AI papers gain citations in biological research.",
+      "difficulty": "medium",
+      "category": "citation_query",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 45,
+      "query": "catalyst design paper impact",
+      "expected_route": "getCitations",
+      "predicted_route": "getCitations",
+      "confidence": 0.029411764705882353,
+      "correct": true,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for get citation information (keyword boost: +1)",
+      "expected_answer": "Catalyst design ML papers influence chemical synthesis research.",
+      "difficulty": "medium",
+      "category": "impact_query",
+      "sources": [
+        "chemRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 46,
+      "query": "compare BERT and GPT models",
+      "expected_route": "comparePapers",
+      "predicted_route": "comparePapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for compare multiple papers or approaches (keyword boost: +1)",
+      "expected_answer": "BERT uses bidirectional encoding while GPT uses autoregressive generation.",
+      "difficulty": "medium",
+      "category": "model_comparison",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 47,
+      "query": "difference between ResNet and YOLO",
+      "expected_route": "comparePapers",
+      "predicted_route": "comparePapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for compare multiple papers or approaches (keyword boost: +1)",
+      "expected_answer": "ResNet focuses on classification while YOLO addresses object detection.",
+      "difficulty": "medium",
+      "category": "architecture_comparison",
+      "sources": [
+        "arXiv",
+        "Scholar"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 48,
+      "query": "BERT versus RoBERTa comparison",
+      "expected_route": "comparePapers",
+      "predicted_route": "comparePapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 8.5 for compare multiple papers or approaches (keyword boost: +1)",
+      "expected_answer": "RoBERTa improved BERT by optimizing training procedures.",
+      "difficulty": "medium",
+      "category": "model_comparison",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 49,
+      "query": "transformer vs CNN architectures",
+      "expected_route": "comparePapers",
+      "predicted_route": "comparePapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for compare multiple papers or approaches (keyword boost: +1)",
+      "expected_answer": "Transformers use attention while CNNs use convolutional layers.",
+      "difficulty": "hard",
+      "category": "architecture_comparison",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 50,
+      "query": "COVID-19 detection methods comparison",
+      "expected_route": "comparePapers",
+      "predicted_route": "comparePapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.0 for compare multiple papers or approaches",
+      "expected_answer": "Different COVID-19 detection approaches vary in accuracy and speed.",
+      "difficulty": "hard",
+      "category": "method_comparison",
+      "sources": [
+        "medRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 51,
+      "query": "protein folding vs drug discovery AI",
+      "expected_route": "comparePapers",
+      "predicted_route": "comparePapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for compare multiple papers or approaches (keyword boost: +1)",
+      "expected_answer": "Both use AI but focus on different biological problems.",
+      "difficulty": "hard",
+      "category": "domain_comparison",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 52,
+      "query": "catalyst design vs synthesis prediction",
+      "expected_route": "comparePapers",
+      "predicted_route": "comparePapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for compare multiple papers or approaches (keyword boost: +1)",
+      "expected_answer": "Both use ML for chemistry but target different aspects.",
+      "difficulty": "hard",
+      "category": "method_comparison",
+      "sources": [
+        "chemRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 53,
+      "query": "what's better GPT-3 or BERT",
+      "expected_route": "comparePapers",
+      "predicted_route": "comparePapers",
+      "confidence": 0.029411764705882353,
+      "correct": true,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for compare multiple papers or approaches (keyword boost: +1)",
+      "expected_answer": "GPT-3 excels at generation while BERT excels at understanding.",
+      "difficulty": "medium",
+      "category": "model_comparison",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 54,
+      "query": "trends in computer vision",
+      "expected_route": "trendAnalysis",
+      "predicted_route": "trendAnalysis",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 5.5 for analyze research trends (keyword boost: +1)",
+      "expected_answer": "Computer vision evolved from CNNs to attention-based models.",
+      "difficulty": "medium",
+      "category": "domain_trends",
+      "sources": [
+        "arXiv",
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 55,
+      "query": "evolution of language models",
+      "expected_route": "trendAnalysis",
+      "predicted_route": "trendAnalysis",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for analyze research trends (keyword boost: +1)",
+      "expected_answer": "Language models evolved from BERT to GPT-style generation.",
+      "difficulty": "medium",
+      "category": "model_trends",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 56,
+      "query": "development in medical AI over time",
+      "expected_route": "trendAnalysis",
+      "predicted_route": "trendAnalysis",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.0 for analyze research trends (keyword boost: +2)",
+      "expected_answer": "Medical AI progressed from basic analysis to clinical deployment.",
+      "difficulty": "hard",
+      "category": "domain_trends",
+      "sources": [
+        "medRxiv",
+        "PubMed"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 57,
+      "query": "historical progress in biological AI",
+      "expected_route": "trendAnalysis",
+      "predicted_route": "trendAnalysis",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 5.0 for analyze research trends",
+      "expected_answer": "Biological AI advanced from simple models to complex protein prediction.",
+      "difficulty": "hard",
+      "category": "domain_trends",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 58,
+      "query": "chemistry AI evolution timeline",
+      "expected_route": "trendAnalysis",
+      "predicted_route": "trendAnalysis",
+      "confidence": 0.5,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 2.5 for analyze research trends (keyword boost: +1)",
+      "expected_answer": "Chemistry AI evolved from basic property prediction to complex synthesis.",
+      "difficulty": "hard",
+      "category": "domain_trends",
+      "sources": [
+        "chemRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 59,
+      "query": "Nature journal impact factor",
+      "expected_route": "journalAnalysis",
+      "predicted_route": "journalAnalysis",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 3 pattern(s) with score 12.5 for analyze journals and venues (keyword boost: +1)",
+      "expected_answer": "Nature has an impact factor of 42.8 and high prestige.",
+      "difficulty": "easy",
+      "category": "journal_metrics",
+      "sources": [
+        "general"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 60,
+      "query": "best venues for machine learning papers",
+      "expected_route": "journalAnalysis",
+      "predicted_route": "journalAnalysis",
+      "confidence": 0.5,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 3.5 for analyze journals and venues (keyword boost: +1)",
+      "expected_answer": "Top ML venues include NeurIPS, CVPR, and prestigious journals.",
+      "difficulty": "medium",
+      "category": "venue_recommendation",
+      "sources": [
+        "general"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 61,
+      "query": "medical journal ranking for AI research",
+      "expected_route": "journalAnalysis",
+      "predicted_route": "journalAnalysis",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 8.5 for analyze journals and venues (keyword boost: +1)",
+      "expected_answer": "Medical AI is published in specialized and general medical journals.",
+      "difficulty": "hard",
+      "category": "domain_venue",
+      "sources": [
+        "PubMed"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 62,
+      "query": "papers related to transformers",
+      "expected_route": "getRelatedPapers",
+      "predicted_route": "getRelatedPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 6.5 for find related research (keyword boost: +1)",
+      "expected_answer": "Transformer-related work includes BERT, GPT, and vision transformers.",
+      "difficulty": "medium",
+      "category": "related_work",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 63,
+      "query": "similar research to protein folding",
+      "expected_route": "getRelatedPapers",
+      "predicted_route": "getRelatedPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for find related research (keyword boost: +1)",
+      "expected_answer": "Related protein research includes drug discovery and molecular prediction.",
+      "difficulty": "hard",
+      "category": "related_work",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 64,
+      "query": "connected work to COVID-19 detection",
+      "expected_route": "getRelatedPapers",
+      "predicted_route": "getRelatedPapers",
+      "confidence": 0.019230769230769232,
+      "correct": true,
+      "explanation": "Matched 0 pattern(s) with score 0.5 for find related research (keyword boost: +1)",
+      "expected_answer": "Related COVID research includes other diagnostic and treatment methods.",
+      "difficulty": "hard",
+      "category": "related_work",
+      "sources": [
+        "medRxiv"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 65,
+      "query": "find related transformer papers, analyze their citations, and compare approaches",
+      "expected_route": "getRelatedPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": false,
+      "explanation": "Matched 2 pattern(s) with score 7.0 for search for research papers (keyword boost: +2)",
+      "expected_answer": "Related transformer papers show varying citation patterns and different architectural approaches.",
+      "difficulty": "hard",
+      "category": "multi_route_complex",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": [
+        "getRelatedPapers",
+        "getCitations",
+        "comparePapers"
+      ]
+    },
+    {
+      "test_id": 66,
+      "query": "similar protein folding papers and their impact comparison",
+      "expected_route": "getRelatedPapers",
+      "predicted_route": "getRelatedPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 1 pattern(s) with score 4.5 for find related research (keyword boost: +1)",
+      "expected_answer": "Related protein folding research varies in citation impact and methodological approaches.",
+      "difficulty": "hard",
+      "category": "multi_route_complex",
+      "sources": [
+        "bioRxiv"
+      ],
+      "multi_route": [
+        "getRelatedPapers",
+        "getCitations",
+        "comparePapers"
+      ]
+    },
+    {
+      "test_id": 67,
+      "query": "find BERT papers, get author details, and analyze citation impact",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": true,
+      "explanation": "Matched 2 pattern(s) with score 7.0 for search for research papers (keyword boost: +2)",
+      "expected_answer": "BERT papers by key authors show significant citation impact in NLP research.",
+      "difficulty": "hard",
+      "category": "multi_route_analysis",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": [
+        "searchPapers",
+        "getAuthorInfo",
+        "getCitations"
+      ]
+    },
+    {
+      "test_id": 68,
+      "query": "analyze AI trends, find recent papers, and compare with earlier work",
+      "expected_route": "trendAnalysis",
+      "predicted_route": "searchPapers",
+      "confidence": 0.7,
+      "correct": false,
+      "explanation": "Matched 2 pattern(s) with score 6.0 for search for research papers (keyword boost: +2)",
+      "expected_answer": "AI trends show evolution from basic models to sophisticated architectures.",
+      "difficulty": "hard",
+      "category": "multi_route_temporal",
+      "sources": [
+        "multiple"
+      ],
+      "multi_route": [
+        "trendAnalysis",
+        "searchPapers",
+        "comparePapers"
+      ]
+    },
+    {
+      "test_id": 69,
+      "query": "machine learning",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "General machine learning query returns diverse research papers.",
+      "difficulty": "easy",
+      "category": "ambiguous",
+      "sources": [
+        "multiple"
+      ],
+      "multi_route": null
+    },
+    {
+      "test_id": 70,
+      "query": "BERT",
+      "expected_route": "searchPapers",
+      "predicted_route": "searchPapers",
+      "confidence": 0.3,
+      "correct": true,
+      "explanation": "Fallback: no specific patterns matched, defaulting to paper search",
+      "expected_answer": "BERT query could search papers, get citations, or find related work.",
+      "difficulty": "medium",
+      "category": "ambiguous",
+      "sources": [
+        "arXiv"
+      ],
+      "multi_route": null
+    }
+  ],
+  "route_coverage": {
+    "available_routes": [
+      "getRelatedPapers",
+      "searchPapers",
+      "getAuthorInfo",
+      "comparePapers",
+      "journalAnalysis",
+      "trendAnalysis",
+      "getCitations"
+    ],
+    "tested_routes": [
+      "getRelatedPapers",
+      "searchPapers",
+      "getAuthorInfo",
+      "comparePapers",
+      "journalAnalysis",
+      "trendAnalysis",
+      "getCitations"
+    ],
+    "missing_routes": [],
+    "extra_routes": [],
+    "coverage_complete": true,
+    "route_distribution": {
+      "searchPapers": 23,
+      "getAuthorInfo": 15,
+      "getCitations": 10,
+      "comparePapers": 8,
+      "trendAnalysis": 6,
+      "journalAnalysis": 3,
+      "getRelatedPapers": 5
+    },
+    "multi_route_coverage": 4
+  },
+  "confidence_analysis": {
+    "avg_confidence_correct": 0.535947651550842,
+    "avg_confidence_incorrect": 0.4113636363636363,
+    "high_confidence_correct": 0,
+    "high_confidence_incorrect": 0,
+    "total_correct": 59,
+    "total_incorrect": 11
+  },
+  "pattern_analysis": {
+    "ambiguous_queries": [
+      {
+        "query": "machine learning",
+        "route": "searchPapers",
+        "confidence": 0.3,
+        "explanation": "Fallback: no specific patterns matched, defaulting to paper search"
+      },
+      {
+        "query": "BERT",
+        "route": "searchPapers",
+        "confidence": 0.3,
+        "explanation": "Fallback: no specific patterns matched, defaulting to paper search"
+      },
+      {
+        "query": "compare models",
+        "route": "comparePapers",
+        "confidence": 0.7,
+        "explanation": "Matched 1 pattern(s) with score 4.5 for compare multiple papers or approaches (keyword boost: +1)"
+      },
+      {
+        "query": "recent work",
+        "route": "searchPapers",
+        "confidence": 0.3,
+        "explanation": "Fallback: no specific patterns matched, defaulting to paper search"
+      },
+      {
+        "query": "author papers",
+        "route": "searchPapers",
+        "confidence": 0.020833333333333332,
+        "explanation": "Matched 0 pattern(s) with score 0.5 for search for research papers (keyword boost: +1)"
+      }
+    ],
+    "total_ambiguous": 5
+  },
+  "engine_statistics": {
+    "total_queries": 75,
+    "route_distribution": {
+      "searchPapers": 37,
+      "getAuthorInfo": 9,
+      "getCitations": 7,
+      "journalAnalysis": 4,
+      "comparePapers": 9,
+      "trendAnalysis": 5,
+      "getRelatedPapers": 4
+    },
+    "average_confidence": 0.5035565969977733,
+    "confidence_by_route": {
+      "searchPapers": 0.4019144144144144,
+      "getAuthorInfo": 0.601984126984127,
+      "getCitations": 0.5470588235294117,
+      "journalAnalysis": 0.6499999999999999,
+      "comparePapers": 0.6254901960784314,
+      "trendAnalysis": 0.6599999999999999,
+      "getRelatedPapers": 0.5298076923076923
+    },
+    "most_confident_route": [
+      "trendAnalysis",
+      0.6599999999999999
+    ]
+  }
+}

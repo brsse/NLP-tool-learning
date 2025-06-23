@@ -1,118 +1,84 @@
-## Single-Step Routes (4 combinations)
+# Core Tool Learning Routes (7 main routes)
+searchPapers
+getAuthorInfo
+getCitations
+getRelatedPapers
+comparePapers
+trendAnalysis
+journalAnalysis
 
-1. model_collection
-   Path: model_collection
-   Actions: searchModels → getModelMetadata → rankResults
-   Data: model_list, model_metadata
-   Description: Direct AI model search and collection
+# Route Combinations (2-step workflows)
+searchPapers -> getAuthorInfo
+searchPapers -> getCitations
+searchPapers -> getRelatedPapers
+getAuthorInfo -> searchPapers
+getAuthorInfo -> getCitations
+getCitations -> searchPapers
+getCitations -> getRelatedPapers
+getCitations -> comparePapers
+getRelatedPapers -> searchPapers
+getRelatedPapers -> getCitations
+getRelatedPapers -> comparePapers
+comparePapers -> getCitations
+comparePapers -> getRelatedPapers
+trendAnalysis -> searchPapers
+trendAnalysis -> getCitations
+journalAnalysis -> searchPapers
 
-2. dataset_collection
-   Path: dataset_collection
-   Actions: searchDatasets → getDatasetMetadata → rankResults
-   Data: dataset_list, dataset_metadata
-   Description: Direct dataset search and collection
+# Complex Route Chains (3-step workflows)
+searchPapers -> getCitations -> getAuthorInfo
+searchPapers -> getAuthorInfo -> getCitations
+getAuthorInfo -> searchPapers -> getCitations
+getCitations -> searchPapers -> getRelatedPapers
+getCitations -> getRelatedPapers -> comparePapers
+getRelatedPapers -> getCitations -> comparePapers
+trendAnalysis -> searchPapers -> getCitations
+journalAnalysis -> searchPapers -> getCitations
 
-3. web_search
-   Path: web_search
-   Actions: searchWeb → filterResults → rankResults
-   Data: web_results, filtered_content
-   Description: Web search for current information
+# Comprehensive Test Distribution (70 Test Cases)
+# searchPapers (23 cases)
+# - Basic search: 4 cases
+# - Temporal search: 3 cases  
+# - Technical search: 4 cases
+# - Domain search: 6 cases
+# - Specialized search: 5 cases
+# - Ambiguous queries: 2 cases
 
-4. research
-   Path: research
-   Actions: searchPapers → getPaperContent → filterByRelevance
-   Data: paper_list, paper_metadata
-   Description: Academic papers from arXiv
+# getAuthorInfo (15 cases)
+# - Famous authors: 6 cases
+# - Specific authors: 6 cases
+# - Domain authors: 3 cases
 
-## Two-Step Routes (5 combinations)
+# getCitations (10 cases)
+# - Basic citation: 2 cases
+# - Impact analysis: 2 cases
+# - Bibliometric analysis: 3 cases
+# - Domain citations: 3 cases
 
-5. research → analysis
-   Path: research → analysis
-   Actions: searchPapers → getPaperContent → analyzeData → synthesizeResults
-   Data: paper_list, paper_content, research_analysis
-   Description: Academic research with insights analysis
+# comparePapers (8 cases)
+# - Model comparison: 4 cases
+# - Architecture comparison: 2 cases
+# - Method comparison: 2 cases
 
-6. web_search → analysis
-   Path: web_search → analysis
-   Actions: searchWeb → filterResults → analyzeData → synthesizeResults
-   Data: web_results, filtered_content, web_analysis
-   Description: Web search with content analysis
+# trendAnalysis (6 cases)
+# - Field trends: 3 cases
+# - Domain trends: 3 cases
 
-7. author → research
-   Path: author → research
-   Actions: searchPerson → getPersonPubs → getPaperContent → rankResults
-   Data: author_info, paper_list, paper_content
-   Description: Find research papers by specific author
+# journalAnalysis (3 cases)
+# - Journal metrics: 1 case
+# - Venue recommendation: 1 case
+# - Domain venues: 1 case
 
-8. author → model_collection
-   Path: author → model_collection
-   Actions: searchPerson → getPersonModels → getModelMetadata → rankResults
-   Data: author_info, model_list, model_metadata
-   Description: Find models by specific author
+# getRelatedPapers (5 cases)
+# - Related search: 5 cases
 
-9. huggingface → data_collection
-   Path: huggingface → data_collection
-   Actions: searchModels → searchDatasets → getModelMetadata → getDatasetMetadata → synthesizeResults
-   Data: model_list, dataset_list, combined_metadata
-   Description: Comprehensive HuggingFace resource search
+# Multi-Route Cases (4 cases)
+# - getRelatedPapers -> getCitations -> comparePapers: 2 cases
+# - searchPapers -> getAuthorInfo -> getCitations: 1 case
+# - trendAnalysis -> searchPapers -> comparePapers: 1 case
 
-## Platform-Specific Routes 
-
-10. huggingface → model_collection
-    Path: huggingface → model_collection
-    Actions: searchModels → getModelMetadata → rankResults
-    Data: model_list, model_metadata
-    Description: Search HuggingFace model repository
-
-11. huggingface → dataset_collection
-    Path: huggingface → dataset_collection
-    Actions: searchDatasets → getDatasetMetadata → rankResults
-    Data: dataset_list, dataset_metadata
-    Description: Search HuggingFace dataset repository
-
-## Multi-Step Complex Routes 
-
-12. author → model_collection → research → analysis
-    Path: author → model_collection → research → analysis
-    Actions: searchPerson → getPersonModels → getPersonPubs → analyzeData → synthesizeResults
-    Data: author_info, model_list, paper_list, comprehensive_analysis
-    Description: Comprehensive analysis of author's contributions
-
-13. data_collection → research → analysis
-    Path: data_collection → research → analysis
-    Actions: searchModels → searchDatasets → searchPapers → comprehensiveAnalysis
-    Data: models, datasets, papers, full_analysis
-    Description: Complete AI ecosystem analysis
-
-## Action Sequence Examples
-
-### Person-Centric Actions
-- searchPerson → getPersonModels → getModelMetadata
-- searchPerson → getPersonPubs → getPaperContent
-- searchPerson → getCoauthors → getCoauthors
-
-### Resource Discovery Actions
-- searchModels → getModelMetadata → rankResults
-- searchDatasets → getDatasetMetadata → filterResults
-- searchPapers → getPaperContent → analyzeData
-
-### Analysis Actions
-- searchWeb → filterResults → synthesizeResults
-- searchModels → searchDatasets → comprehensiveAnalysis
-
-## Coverage Statistics
-- Total Routes: 13 combinations
-- Single-step: 4 routes (31%)
-- Two-step: 5 routes (38%)
-- Multi-step: 4 routes (31%)
-- Platforms: HuggingFace + arXiv + Web (100%)
-- Data Types: Models, Datasets, Papers, Web (100%)
-- Analysis Depth: Basic → Comprehensive (100%)
-
-## Query Pattern Examples
-- "Find XXX by YYY for ZZZ task" → author routes
-- "XXX datasets for YYY task" → dataset_collection
-- "Best XXX models on YYY platform" → model_collection
-- "Latest XXX research" → research routes
-- "Comprehensive analysis of XXX" → multi-step routes
-- "What's new in XXX" → web_search routes
+# Total Coverage: 70 test cases across all routes and combinations
+# All 7 core routes are fully tested with comprehensive edge cases
+# Multi-route workflows test complex query understanding
+# Difficulty levels: Easy (12), Medium (33), Hard (25)
+# Data sources: arXiv, PubMed, Scholar, bioRxiv, medRxiv, chemRxiv
