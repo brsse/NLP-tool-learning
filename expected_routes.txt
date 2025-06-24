@@ -1,5 +1,5 @@
-# Available Routes for Tool Learning System
-# Static dataset: 3,500 papers across 7 ML/AI topics
+# Tool Learning System Routes
+# Multi-route support: Can select single or multiple routes per query
 
 # =============================================================================
 # 7 ROUTES
@@ -14,46 +14,52 @@ trendAnalysis
 journalAnalysis
 
 # =============================================================================
-# WORKING EXAMPLES
+# SAMPLE QUESTIONS BY ROUTE
 # =============================================================================
 
-## searchPapers (Find research papers)
-find papers about BERT
-machine learning optimization
-deep learning research  
-neural network architectures
-transformer models
+## searchPapers
+find papers about machine learning optimization
+search for adversarial machine learning papers
+find BERT papers and applications
+healthcare machine learning applications
+tool learning and agent systems
 
-## getAuthorInfo (Author information)
-who is Geoffrey Hinton
-tell me about Yann LeCun
-research by Yoshua Bengio
-papers by Ian Goodfellow
+## getAuthorInfo
+who is Elad Hazan
+research by Wei-Hung Weng
+tell me about Ian Goodfellow
+papers by Amnon Shashua
 
-## getCitations (Citation analysis)
-citation count for BERT paper
-impact factor of machine learning research
-citation analysis for optimization paper
+## getCitations
+citation analysis for machine learning papers
+impact factor of optimization research
+citation count for BERT papers
 
-## getRelatedPapers (Find related work)
-papers related to BERT
-similar research to machine learning
-connected work to deep learning
+## getRelatedPapers
+papers related to machine learning optimization
+similar research to BERT models
+connected work to adversarial machine learning
 
-## comparePapers (Compare approaches)
-compare BERT and GPT models
+## comparePapers
+compare supervised and unsupervised learning
 difference between optimization methods
-BERT versus other transformer models
+BERT versus other language models
 
-## trendAnalysis (Research trends)
-trends in machine learning
-evolution of deep learning
-progress in BERT research
+## trendAnalysis
+trends in machine learning research
+evolution of optimization algorithms
+progress in BERT and transformer models
 
-## journalAnalysis (Publication venues)
-best publication venues for ML research
+## journalAnalysis
+best venues for machine learning research
 top conferences for AI papers
-best venues for deep learning
+publication patterns in optimization research
+
+## Multi-Route Examples
+find papers by Elad Hazan on optimization → searchPapers, getAuthorInfo
+compare BERT models and analyze their citations → comparePapers, getCitations
+search for federated learning papers and find related work → searchPapers, getRelatedPapers
+analyze trends in machine learning and best publication venues → trendAnalysis, journalAnalysis
 
 # =============================================================================
 # DATASET (3,500 Papers)

@@ -7,7 +7,7 @@ LLM-powered system that intelligently routes research queries and searches throu
 ## ⚡ What You Have
 
 - **2 Models**: `llama3.2`, `deepseek-r1` 
-- **7 Routes**: Smart query routing for different research tasks
+- **7 Routes**: Smart single or multi-route selection for complex queries
 - **3,500 Papers**: Static arXiv dataset across 7 ML/AI topics
 - **QA Testing**: Comprehensive testing with quality metrics
 

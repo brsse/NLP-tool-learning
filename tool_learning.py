@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Tool Learning System - LLM Route Selection + arXiv Paper Search
+Tool Learning System - LLM Multi-Route Selection + arXiv Paper Search
 
 Consolidated system for:
-1. LLM-based intelligent route selection 
+1. LLM-based intelligent multi-route selection 
 2. arXiv paper search (live API + static dataset)
-3. Response generation with context
+3. Response generation with combined route context
 """
 
 import os
@@ -28,7 +28,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class ToolLearningSystem:
-    """Main tool learning system with LLM routing and paper search"""
+    """Main tool learning system with LLM multi-routing and paper search"""
     
     def __init__(self, use_static_data: bool = False, ollama_model: str = "llama3.2"):
         self.use_static_data = use_static_data
@@ -64,15 +64,15 @@ class ToolLearningSystem:
         except Exception:
             return False
     
-    def select_route(self, query: str) -> Tuple[str, float, str]:
-        """Select the best route for a query using LLM or fallback"""
+    def select_route(self, query: str) -> Tuple[List[str], float, str]:
+        """Select one or more routes for a query using LLM or fallback"""
         if self.llm_available:
             return self._select_route_llm(query)
         else:
             return self._select_route_fallback(query)
     
-    def _select_route_llm(self, query: str) -> Tuple[str, float, str]:
-        """Use LLM for route selection"""
+    def _select_route_llm(self, query: str) -> Tuple[List[str], float, str]:
+        """Use LLM for multi-route selection"""
         prompt = f"""
 You are a route selector for a research paper tool learning system.
 
@@ -87,7 +87,8 @@ Available routes:
 
 Query: "{query}"
 
-Select the SINGLE best route. Respond with only the route name.
+Select the most appropriate route(s). You can select one or multiple routes if the query would benefit from multiple approaches.
+Respond with route names separated by commas (e.g., "searchPapers" or "searchPapers, getAuthorInfo").
 """
         
         try:
@@ -103,16 +104,25 @@ Select the SINGLE best route. Respond with only the route name.
             
             if response.status_code == 200:
                 result = response.json()
-                selected_route = result['response'].strip()
+                selected_text = result['response'].strip()
                 
-                # Validate route
-                if selected_route in self.routes:
-                    return selected_route, 0.95, f"LLM selected {selected_route}"
-                else:
-                    # Try to extract valid route
-                    for route in self.routes:
-                        if route.lower() in selected_route.lower():
-                            return route, 0.85, f"LLM selected {route} (extracted)"
+                # Parse multiple routes
+                routes = [route.strip() for route in selected_text.split(',')]
+                valid_routes = []
+                
+                for route in routes:
+                    if route in self.routes:
+                        valid_routes.append(route)
+                    else:
+                        # Try to extract valid route
+                        for valid_route in self.routes:
+                            if valid_route.lower() in route.lower():
+                                valid_routes.append(valid_route)
+                                break
+                
+                if valid_routes:
+                    confidence = 0.95 if len(valid_routes) == len(routes) else 0.85
+                    return valid_routes, confidence, f"LLM selected {', '.join(valid_routes)}"
                             
         except Exception as e:
             logger.warning(f"LLM route selection failed: {e}")
@@ -120,7 +130,7 @@ Select the SINGLE best route. Respond with only the route name.
         # Fallback if LLM fails
         return self._select_route_fallback(query)
     
-    def _select_route_fallback(self, query: str) -> Tuple[str, float, str]:
+    def _select_route_fallback(self, query: str) -> Tuple[List[str], float, str]:
         """Fallback route selection using keywords"""
         query_lower = query.lower()
         
@@ -142,10 +152,22 @@ Select the SINGLE best route. Respond with only the route name.
                 scores[route] = score / len(keywords)
         
         if scores:
-            best_route = max(scores.items(), key=lambda x: x[1])
-            return best_route[0], best_route[1], f"Keyword-based selection: {best_route[0]}"
+            # Select routes with high scores (above threshold or top 2)
+            sorted_routes = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+            selected_routes = []
+            
+            # Take top route plus any others with similar scores
+            if sorted_routes:
+                top_score = sorted_routes[0][1]
+                for route, score in sorted_routes:
+                    if score >= top_score * 0.7 and len(selected_routes) < 3:
+                        selected_routes.append(route)
+            
+            if selected_routes:
+                avg_confidence = sum(scores[route] for route in selected_routes) / len(selected_routes)
+                return selected_routes, avg_confidence, f"Keyword-based selection: {', '.join(selected_routes)}"
         
-        return 'searchPapers', 0.5, "Default route: searchPapers"
+        return ['searchPapers'], 0.5, "Default route: searchPapers"
     
     def search_papers(self, query: str, max_results: int = 10) -> List[Dict[str, Any]]:
         """Search for papers using static data or live API"""
@@ -318,16 +340,16 @@ Select the SINGLE best route. Respond with only the route name.
         
         return datetime.now().year
     
-    def generate_response(self, query: str, route: str, papers: List[Dict[str, Any]]) -> str:
-        """Generate LLM response using query, route, and papers"""
+    def generate_response(self, query: str, routes: List[str], papers: List[Dict[str, Any]]) -> str:
+        """Generate LLM response using query, routes, and papers"""
         if not self.llm_available:
-            return self._generate_fallback_response(query, route, papers)
+            return self._generate_fallback_response(query, routes, papers)
         
         # Prepare paper context
         paper_context = ""
         if papers:
             paper_context = "\n\nRelevant papers found:\n"
-            for i, paper in enumerate(papers[:3], 1):
+            for i, paper in enumerate(papers[:5], 1):
                 paper_context += f"{i}. {paper['title']}\n"
                 paper_context += f"   Authors: {', '.join(paper['authors'][:3])}\n"
                 paper_context += f"   Year: {paper['year']}\n"
@@ -335,15 +357,16 @@ Select the SINGLE best route. Respond with only the route name.
                     paper_context += f"   Abstract: {paper['abstract'][:200]}...\n"
                 paper_context += "\n"
         
-        # Generate prompt based on route
+        # Generate prompt for multi-route response
+        routes_str = ', '.join(routes)
         prompt = f"""You are a helpful research assistant. Answer the user's query using the provided papers.
 
-Route: {route}
+Selected Routes: {routes_str}
 Query: {query}
 
 {paper_context}
 
-Provide a helpful, informative response based on the papers found. Be specific and cite relevant information."""
+Provide a comprehensive response that addresses the query using the selected routes. Organize your response to cover all relevant aspects."""
         
         try:
             response = requests.post(
@@ -363,16 +386,17 @@ Provide a helpful, informative response based on the papers found. Be specific a
         except Exception as e:
             logger.warning(f"LLM response generation failed: {e}")
         
-        return self._generate_fallback_response(query, route, papers)
+        return self._generate_fallback_response(query, routes, papers)
     
-    def _generate_fallback_response(self, query: str, route: str, papers: List[Dict[str, Any]]) -> str:
+    def _generate_fallback_response(self, query: str, routes: List[str], papers: List[Dict[str, Any]]) -> str:
         """Generate fallback response when LLM is not available"""
         if not papers:
             return f"I searched for papers related to '{query}' but didn't find any relevant results in the dataset."
         
-        response = f"Based on your query '{query}', I found {len(papers)} relevant papers:\n\n"
+        routes_str = ', '.join(routes)
+        response = f"Based on your query '{query}' using routes [{routes_str}], I found {len(papers)} relevant papers:\n\n"
         
-        for i, paper in enumerate(papers[:3], 1):
+        for i, paper in enumerate(papers[:5], 1):
             response += f"{i}. **{paper['title']}**\n"
             response += f"   Authors: {', '.join(paper['authors'][:3])}\n"
             response += f"   Year: {paper['year']}\n"
@@ -380,8 +404,8 @@ Provide a helpful, informative response based on the papers found. Be specific a
                 response += f"   Abstract: {paper['abstract'][:150]}...\n"
             response += "\n"
         
-        if len(papers) > 3:
-            response += f"...and {len(papers) - 3} more papers.\n"
+        if len(papers) > 5:
+            response += f"...and {len(papers) - 5} more papers.\n"
         
         return response
     
@@ -404,13 +428,14 @@ Provide a helpful, informative response based on the papers found. Be specific a
             'static_data_mode': self.use_static_data,
             'static_papers_count': static_count,
             'available_routes': list(self.routes.keys()),
-            'routes_count': len(self.routes)
+            'routes_count': len(self.routes),
+            'multi_route_support': True
         }
 
 def main():
     """Test the tool learning system"""
-    print("🤖 Tool Learning System Test")
-    print("=" * 40)
+    print("🤖 Multi-Route Tool Learning System Test")
+    print("=" * 45)
     
     # Initialize system
     system = ToolLearningSystem()
@@ -418,24 +443,24 @@ def main():
     # Test queries
     test_queries = [
         "find papers about machine learning",
-        "who is Geoffrey Hinton",
-        "compare BERT and GPT models",
-        "trends in AI research"
+        "who is Geoffrey Hinton and what are his papers",
+        "compare BERT and GPT models and their citations",
+        "trends in AI research and best venues"
     ]
     
     for query in test_queries:
         print(f"\n🔍 Query: {query}")
         
-        # Route selection
-        route, confidence, explanation = system.select_route(query)
-        print(f"   Route: {route} (confidence: {confidence:.3f})")
+        # Multi-route selection
+        routes, confidence, explanation = system.select_route(query)
+        print(f"   Routes: {', '.join(routes)} (confidence: {confidence:.3f})")
         
         # Paper search
         papers = system.search_papers(query, max_results=3)
         print(f"   Papers found: {len(papers)}")
         
         # Response generation
-        response = system.generate_response(query, route, papers)
+        response = system.generate_response(query, routes, papers)
         print(f"   Response: {response[:100]}...")
     
     # System statistics

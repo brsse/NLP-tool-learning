@@ -12,18 +12,19 @@ Available routes:
 
 Query: "{query}"
 
-Select the SINGLE best route. Respond with only the route name."""
+Select the most appropriate route(s). You can select one or multiple routes if the query would benefit from multiple approaches.
+Respond with route names separated by commas (e.g., "searchPapers" or "searchPapers, getAuthorInfo")."""
 
 # Response Generation
 RESPONSE_GENERATION_PROMPT = """You are a research assistant. Answer the user's query using the provided papers.
 
-Route: {route}
+Routes: {routes}
 Query: {query}
 
 Papers found:
 {paper_context}
 
-Provide a helpful response based on the papers."""
+Provide a comprehensive response that addresses the query using the selected routes."""
 
 # No Papers Found
 RESPONSE_NO_PAPERS = """I searched for papers related to "{query}" but didn't find relevant results.
@@ -31,7 +32,7 @@ RESPONSE_NO_PAPERS = """I searched for papers related to "{query}" but didn't fi
 Try rephrasing your query or using different keywords."""
 
 # Helper Functions
-def format_papers(papers: list, max_papers: int = 3) -> str:
+def format_papers(papers: list, max_papers: int = 5) -> str:
     """Format papers into readable context"""
     if not papers:
         return "No papers found."
@@ -52,10 +53,11 @@ def get_selection_prompt(query: str) -> str:
     """Get route selection prompt"""
     return ROUTE_SELECTION_PROMPT.format(query=query)
 
-def get_response_prompt(route: str, query: str, papers: list) -> str:
+def get_response_prompt(routes: list, query: str, papers: list) -> str:
     """Get response generation prompt"""
     if not papers:
         return RESPONSE_NO_PAPERS.format(query=query)
     
+    routes_str = ', '.join(routes) if isinstance(routes, list) else str(routes)
     paper_context = format_papers(papers)
-    return RESPONSE_GENERATION_PROMPT.format(route=route, query=query, paper_context=paper_context) 
+    return RESPONSE_GENERATION_PROMPT.format(routes=routes_str, query=query, paper_context=paper_context) 

@@ -1,0 +1,237 @@
+{
+  "route_performance": {
+    "searchPapers": {
+      "accuracy": 1.0,
+      "avg_quality": 0.665,
+      "avg_papers_found": 10.0,
+      "total_cases": 2
+    }
+  },
+  "response_quality": {
+    "overall_avg_quality": 0.665,
+    "keyword_coverage_avg": 1.0,
+    "expected_answer_alignment_avg": 0.625,
+    "structure_coherence_avg": 0.75
+  },
+  "model_analysis": {
+    "model_name": "llama3.2",
+    "data_mode": "static",
+    "total_test_cases": 2,
+    "route_accuracy": 1.0,
+    "avg_response_time": 38.195096373558044,
+    "total_time": 76.39019274711609,
+    "error_rate": 0.0,
+    "fastest_response": 32.73641586303711,
+    "slowest_response": 43.65321707725525
+  },
+  "difficulty_analysis": {
+    "easy": {
+      "accuracy": 1.0,
+      "avg_quality": 0.6799999999999999,
+      "avg_papers_found": 10.0,
+      "total_cases": 1
+    },
+    "medium": {
+      "accuracy": 1.0,
+      "avg_quality": 0.65,
+      "avg_papers_found": 10.0,
+      "total_cases": 1
+    }
+  },
+  "additional_tests": {
+    "consistency_score": 1.0,
+    "robustness_metrics": {
+      "error_rate": 0.0,
+      "route_accuracy_variance": 0.0,
+      "quality_variance": 0.0
+    },
+    "edge_case_performance": {
+      "zero_papers_found": 0,
+      "low_confidence_correct": 0,
+      "high_confidence_incorrect": 0,
+      "very_short_responses": 0,
+      "very_long_responses": 2
+    }
+  },
+  "papers_analysis": {
+    "total_papers_found": 20,
+    "avg_papers_per_query": 10.0,
+    "papers_by_route": {
+      "searchPapers": 10.0
+    },
+    "papers_by_difficulty": {
+      "easy": 10.0,
+      "medium": 10.0
+    },
+    "max_papers_found": 10,
+    "min_papers_found": 10
+  },
+  "data_mode_info": {
+    "current_mode": "static",
+    "static_dataset_available": true,
+    "dynamic_api_available": false,
+    "mode_performance_summary": "Using static data mode for this test run"
+  },
+  "test_metadata": {
+    "timestamp": "2025-06-25T00:51:55.096311",
+    "test_cases_count": 2,
+    "model_tested": "llama3.2",
+    "data_mode": "static",
+    "dataset_statistics": {
+      "total_cases": 74,
+      "route_distribution": {
+        "searchPapers": 24,
+        "getAuthorInfo": 11,
+        "getCitations": 8,
+        "getRelatedPapers": 11,
+        "comparePapers": 11,
+        "trendAnalysis": 11,
+        "journalAnalysis": 8
+      },
+      "difficulty_distribution": {
+        "easy": 7,
+        "medium": 49,
+        "hard": 18
+      },
+      "category_distribution": {
+        "basic_search": 1,
+        "specific_topic": 1,
+        "specific_model": 1,
+        "domain_application": 1,
+        "agent_systems": 1,
+        "rag_systems": 1,
+        "factuality": 1,
+        "distributed_learning": 1,
+        "automl": 1,
+        "quantum_ml": 1,
+        "interpretability": 1,
+        "deep_learning_nlp": 1,
+        "reinforcement_learning": 1,
+        "meta_learning": 1,
+        "computer_vision": 1,
+        "time_series": 1,
+        "privacy": 1,
+        "transfer_learning": 1,
+        "scientific_ml": 1,
+        "unsupervised": 1,
+        "author_info": 4,
+        "famous_author": 2,
+        "specific_author": 2,
+        "citation_analysis": 2,
+        "bibliometric": 1,
+        "model_citations": 1,
+        "field_impact": 1,
+        "researcher_metrics": 1,
+        "related_search": 1,
+        "model_related": 1,
+        "security_related": 1,
+        "domain_related": 1,
+        "agent_related": 1,
+        "distributed_related": 1,
+        "quantum_related": 1,
+        "interpretability_related": 1,
+        "learning_types": 1,
+        "optimization_comparison": 1,
+        "model_comparison": 1,
+        "architecture_comparison": 1,
+        "paradigm_comparison": 1,
+        "automation_comparison": 1,
+        "privacy_comparison": 1,
+        "quantum_comparison": 1,
+        "field_trends": 1,
+        "algorithm_trends": 1,
+        "model_trends": 1,
+        "security_trends": 1,
+        "domain_trends": 1,
+        "technology_timeline": 1,
+        "quantum_trends": 1,
+        "interpretability_trends": 1,
+        "venue_analysis": 1,
+        "conference_analysis": 1,
+        "publication_patterns": 1,
+        "journal_rankings": 1,
+        "domain_venues": 1,
+        "field_venues": 1,
+        "multi_route": 10
+      },
+      "multi_route_cases": 10
+    },
+    "detailed_results": [
+      {
+        "query": "find papers about machine learning optimization",
+        "expected_route": "searchPapers",
+        "selected_routes": [
+          "searchPapers",
+          "getRelatedPapers"
+        ],
+        "route_correct": true,
+        "route_partial": true,
+        "route_count": 2,
+        "confidence": 0.95,
+        "papers_found": 10,
+        "response_length": 2573,
+        "response_time": 32.73641586303711,
+        "quality_scores": {
+          "keyword_coverage": 1.0,
+          "structure_coherence": 0.75,
+          "length_optimization": 0.3,
+          "information_density": 0.6,
+          "expected_answer_alignment": 0.75,
+          "average_quality": 0.6799999999999999
+        },
+        "expected_keywords_found": 3,
+        "multi_route_info": {
+          "routes_selected": 2,
+          "primary_route_correct": true,
+          "all_routes": [
+            "searchPapers",
+            "getRelatedPapers"
+          ]
+        }
+      },
+      {
+        "query": "search for adversarial machine learning papers",
+        "expected_route": "searchPapers",
+        "selected_routes": [
+          "searchPapers",
+          "getCitations",
+          "searchPapers",
+          "getCitations",
+          "searchPapers",
+          "getAuthorInfo",
+          "getCitations"
+        ],
+        "route_correct": true,
+        "route_partial": true,
+        "route_count": 7,
+        "confidence": 0.85,
+        "papers_found": 10,
+        "response_length": 2898,
+        "response_time": 43.65321707725525,
+        "quality_scores": {
+          "keyword_coverage": 1.0,
+          "structure_coherence": 0.75,
+          "length_optimization": 0.3,
+          "information_density": 0.7,
+          "expected_answer_alignment": 0.5,
+          "average_quality": 0.65
+        },
+        "expected_keywords_found": 2,
+        "multi_route_info": {
+          "routes_selected": 7,
+          "primary_route_correct": true,
+          "all_routes": [
+            "searchPapers",
+            "getCitations",
+            "searchPapers",
+            "getCitations",
+            "searchPapers",
+            "getAuthorInfo",
+            "getCitations"
+          ]
+        }
+      }
+    ],
+    "error_details": []
+  }
+}

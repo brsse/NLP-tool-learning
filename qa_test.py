@@ -193,9 +193,14 @@ class QATestSuite:
                 route_stats[route]['total'] += 1
                 difficulty_stats[difficulty]['total'] += 1
                 
+                # Handle multi-route correctness
                 if result['route_correct']:
                     route_stats[route]['correct'] += 1
                     difficulty_stats[difficulty]['correct'] += 1
+                elif result.get('route_partial', False):
+                    # Give partial credit for multi-route where expected route is included
+                    route_stats[route]['correct'] += 0.5
+                    difficulty_stats[difficulty]['correct'] += 0.5
                 
                 quality_score = result['quality_scores']['average_quality']
                 papers_found = result['papers_found']
@@ -301,7 +306,7 @@ class QATestSuite:
         return results
     
     def _test_single_case(self, test_case: Dict, model: str, tool_system) -> Dict[str, Any]:
-        """Test a single case"""
+        """Test a single case with multi-route support"""
         query = test_case['query']
         expected_route = test_case['expected_route']
         
@@ -309,16 +314,25 @@ class QATestSuite:
         
         tool_system.ollama_model = model
         
-        # Route selection
-        route, confidence, explanation = tool_system.select_route(query)
-        route_correct = (route == expected_route)
+        # Multi-route selection
+        routes, confidence, explanation = tool_system.select_route(query)
+        
+        # Handle both single and multi-route evaluation
+        if isinstance(routes, list):
+            selected_routes = routes
+        else:
+            selected_routes = [routes]
+        
+        # Route correctness - check if expected route is in selected routes
+        route_correct = expected_route in selected_routes
+        route_partial = len([r for r in selected_routes if r == expected_route]) > 0
         
         # Paper search
         papers = tool_system.search_papers(query, max_results=10)
         papers_found = len(papers)
         
-        # Response generation
-        response = tool_system.generate_response(query, route, papers)
+        # Response generation with multi-route
+        response = tool_system.generate_response(query, selected_routes, papers)
         
         # Quality evaluation
         quality_scores = self.quality_evaluator.evaluate_response(query, response, papers, test_case)
@@ -328,14 +342,21 @@ class QATestSuite:
         return {
             'query': query,
             'expected_route': expected_route,
-            'selected_route': route,
+            'selected_routes': selected_routes,
             'route_correct': route_correct,
+            'route_partial': route_partial,
+            'route_count': len(selected_routes),
             'confidence': confidence,
             'papers_found': papers_found,
             'response_length': len(response),
             'response_time': end_time - start_time,
             'quality_scores': quality_scores,
-            'expected_keywords_found': sum(1 for kw in test_case.get('expected_keywords', []) if kw.lower() in response.lower())
+            'expected_keywords_found': sum(1 for kw in test_case.get('expected_keywords', []) if kw.lower() in response.lower()),
+            'multi_route_info': {
+                'routes_selected': len(selected_routes),
+                'primary_route_correct': expected_route == selected_routes[0] if selected_routes else False,
+                'all_routes': selected_routes
+            }
         }
     
     def _calculate_consistency(self, route_stats: Dict) -> float:

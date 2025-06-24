@@ -156,24 +156,27 @@ def perform_search(query: str, model: str, max_results: int, use_static: bool):
     
     with st.spinner("🔄 Processing your query..."):
         try:
-            # Step 1: Route selection
-            route, confidence, explanation = tool_system.select_route(query)
+            # Step 1: Route selection (returns list of routes for multi-route support)
+            routes_list, confidence, explanation = tool_system.select_route(query)
+            
+            # Convert routes list to string for display
+            routes_str = ', '.join(routes_list) if isinstance(routes_list, list) else str(routes_list)
             
             # Step 2: Paper search
             papers = tool_system.search_papers(query, max_results=max_results)
             
-            # Step 3: Response generation
-            response = tool_system.generate_response(query, route, papers)
+            # Step 3: Response generation (pass list to generate_response)
+            response = tool_system.generate_response(query, routes_list, papers)
             
             end_time = time.time()
             
             # Display results
-            display_results(query, route, confidence, papers, response, end_time - start_time, use_static)
+            display_results(query, routes_str, confidence, papers, response, end_time - start_time, use_static)
             
             # Update search history
             st.session_state.search_history.append({
                 'query': query,
-                'route': route,
+                'route': routes_str,
                 'papers_count': len(papers),
                 'timestamp': datetime.now().strftime("%H:%M:%S")
             })
@@ -232,7 +235,7 @@ def display_results(query: str, route: str, confidence: float, papers: list, res
     if st.button("📁 Export Results as JSON"):
         results = {
             'query': query,
-            'route': route,
+            'route': route,  # This is now routes_str (string format)
             'confidence': confidence,
             'papers_found': len(papers),
             'papers': papers,
