@@ -1,6 +1,15 @@
-# 🤖 NLP Tool Learning Chatbot
+# Tool Learning System
 
-An intelligent research paper chatbot that learns to route user queries to the right tools for comprehensive academic search and analysis.
+🔬 **Intelligent arXiv Paper Search with LLM Route Selection**
+
+LLM-powered system that intelligently routes research queries and searches through a curated arXiv dataset.
+
+## ⚡ What You Have
+
+- **2 Models**: `llama3.2`, `deepseek-r1` 
+- **7 Routes**: Smart query routing for different research tasks
+- **3,500 Papers**: Static arXiv dataset across 7 ML/AI topics
+- **QA Testing**: Comprehensive testing with quality metrics
 
 ## 🚀 Quick Start
 
@@ -8,117 +17,65 @@ An intelligent research paper chatbot that learns to route user queries to the r
 # Install dependencies
 pip install -r requirements.txt
 
-# Run the chatbot
+# Start web interface
 streamlit run app.py
+
+# Test the system
+python qa_test.py
 ```
 
-Visit `http://localhost:8503` to start chatting with research papers!
+## 🎯 Available Routes
 
-## ⚡ Current Capabilities
+| Route | Purpose | Example |
+|-------|---------|---------|
+| `searchPapers` | Find research papers | "find papers about BERT" |
+| `getAuthorInfo` | Author information | "who is Geoffrey Hinton" |
+| `getCitations` | Citation analysis | "citation count for BERT paper" |
+| `getRelatedPapers` | Find related work | "papers related to transformers" |
+| `comparePapers` | Compare approaches | "compare BERT vs GPT" |
+| `trendAnalysis` | Research trends | "trends in machine learning" |
+| `journalAnalysis` | Publication venues | "best ML conferences" |
 
-### **Live APIs (Default)**
-- **✅ arXiv**: CS, AI, ML papers (~0.1s response)
-- **✅ PubMed**: Medical, biomedical research (~3s response)
-- **🔄 Toggle**: Switch between live APIs and static datasets
-
-### **Tool Learning Routes** 
-- `searchPapers` (100% accuracy) - Find papers by keywords
-- `comparePapers` (100% accuracy) - Compare research papers  
-- `journalAnalysis` (100% accuracy) - Analyze publication venues
-- `trendAnalysis` (85.7% accuracy) - Track research trends
-- `getRelatedPapers` (71.4% accuracy) - Find related work
-- `getCitations` (70% accuracy) - Citation analysis
-- `getAuthorInfo` (60% accuracy) - Author research profiles
-
-### **AI Engine**
-- **LLaMA 3.2** via Ollama for intelligent responses
-- **Route Selection** with confidence scoring
-- **Context-Aware** prompts for each tool type
-
-## 📊 Performance
-
-**Overall QA Test Accuracy: 83.8%** (62/74 test cases)
-
-**Strong Areas:**
-- ✅ Basic paper search and comparison
-- ✅ Journal analysis and venue selection
-- ✅ Technical domain queries
-
-**Areas for Improvement:**
-- 🔄 Author name extraction (Dr./Prof. titles)
-- 🔄 Domain-specific citation queries  
-- 🔄 Multi-step workflow routing
-
-## 🛠️ Setup Options
-
-### **Option 1: Live APIs (Recommended)**
-- Real-time search from arXiv and PubMed
-- No setup required - works immediately
-- Fast and always up-to-date
-
-### **Option 2: Static Datasets**
-```bash
-# Download comprehensive datasets (~1.9 GB)
-python dataset_downloader.py
-
-# Toggle to static mode in app sidebar
-```
-
-## 📁 Project Structure
+## 📊 Dataset
 
 ```
-├── app.py                    # Streamlit chatbot interface
-├── tool_learning_engine.py   # Route selection engine  
-├── paper_tools.py           # arXiv/PubMed API integration
-├── ollama_client.py         # LLaMA 3.2 interface
-├── qa_test.py              # 74 comprehensive test cases
-├── dataset_downloader.py    # Static data downloader
-└── requirements.txt         # Dependencies
+dataset/arxiv/ (3,500 papers total)
+├── machine_learning.jsonl     (500 papers)
+├── deep_learning.jsonl        (500 papers)  
+├── bert.jsonl                 (500 papers)
+├── transformers.jsonl         (500 papers)
+├── tool_learning.jsonl        (500 papers)
+├── rag.jsonl                  (500 papers)
+└── hallucination.jsonl        (500 papers)
 ```
-
-## 🎯 Improvement Roadmap
-
-### **Immediate (Based on Current 83.8% Accuracy)**
-
-1. **Author Detection Enhancement** (60% → 85%)
-   - Improve Dr./Prof. title handling
-   - Better name extraction from complex queries
-   - Author disambiguation
-
-2. **Citation Analysis Improvement** (70% → 85%)
-   - Domain-specific citation patterns
-   - Impact factor integration
-   - Citation trend analysis
-
-3. **Multi-Route Workflows** (50% → 75%)
-   - Better compound query handling
-   - Sequential tool chaining
-   - Context preservation across routes
-
-### **Advanced Features**
-
-- 📈 **Real-time metrics dashboard**
-- 🔍 **Advanced search filters** (date, impact factor, venue)
-- 🤝 **Collaborative research suggestions**
-- 📚 **Personal research library management**
-- 🌐 **Multi-language paper support**
 
 ## 🧪 Testing
 
 ```bash
-# Run comprehensive QA tests
+# Run QA tests (sample)
 python qa_test.py
 
-# Test individual APIs
-python paper_tools.py
+# Results saved to: model/[model_name]/qa_test_results_[mode]_[timestamp].json
 ```
 
-## 🔧 Configuration
+Each JSON contains **8 features**:
+1. Route Performance
+2. Response Quality  
+3. Model Analysis
+4. Difficulty Analysis
+5. Additional Tests
+6. Papers Analysis
+7. Data Mode Info
+8. Test Metadata
 
-- **Live APIs**: Default mode, no configuration needed
-- **Ollama**: Install for local LLM ([docs](https://ollama.ai))
-- **Static Data**: Optional for offline usage
+## 🔧 Key Files
+
+- `app.py` - Streamlit web interface
+- `tool_learning.py` - Core system (routing + search)
+- `model.py` - Model management (llama3.2, deepseek-r1)
+- `qa_test.py` - Testing system with quality metrics
+- `qa.py` - 78 test cases with expected answers
+- `prompts.py` - LLM prompts
 
 ---
-
-**Ready to explore research papers intelligently!** 🚀 
+**🔬 Ready to search 3,500 papers with intelligent LLM routing!** 

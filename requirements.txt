@@ -1,8 +1,30 @@
-# Essential dependencies for Tool Learning Chatbot
+# Core Dependencies
 streamlit>=1.28.0
+requests>=2.31.0
+arxiv>=2.1.0
 
-# Paper scraping (optional - comment out if not needed)
+# Data Processing  
+pandas>=2.0.0
+numpy>=1.24.0
+
+# JSON and Typing
+typing-extensions>=4.7.0
+
+# Optional: Advanced Features
+python-dateutil>=2.8.0
+pytz>=2023.3
+
+# Development and Testing (optional)
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0
+
+# System Requirements
+# Python >= 3.8
+# Ollama installed locally for LLM functionality
+
+# arXiv-only paper search and scraping
 paperscraper>=0.2.0
 
-# Ollama API client
-requests>=2.31.0 
+# Analytics and data processing
+plotly>=5.15.0 

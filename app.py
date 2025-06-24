@@ -1,230 +1,253 @@
-#!/usr/bin/env python3
-"""
-Simple Tool Learning Chatbot for Research Papers
-
-A Streamlit chatbot that learns to route user queries to appropriate tools
-for research paper search and analysis.
-"""
-
 import streamlit as st
 import json
+import time
 from datetime import datetime
-from tool_learning_engine import ToolLearningEngine
-from paper_tools import PaperTools
-from ollama_client import OllamaClient
 
-# Page config
+# Import our custom modules
+try:
+    from tool_learning import ToolLearningSystem
+    from model import ModelManager
+    SYSTEM_AVAILABLE = True
+except ImportError as e:
+    st.error(f"System modules not available: {e}")
+    SYSTEM_AVAILABLE = False
+
+# Page configuration
 st.set_page_config(
-    page_title="Tool Learning Chatbot",
-    page_icon="🤖",
+    page_title="Tool Learning System",
+    page_icon="🔬",
     layout="wide"
 )
 
-
-st.markdown(
-    """
-    <style>
-        [data-testid="stSidebar"] {
-            width: 270px;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Initialize session state
-if 'messages' not in st.session_state:
-    st.session_state.messages = []
-if 'engine' not in st.session_state:
-    st.session_state.engine = ToolLearningEngine()
-if 'paper_tools' not in st.session_state:
-    try:
-        # Use live APIs by default (toggle available in sidebar)
-        st.session_state.paper_tools = PaperTools(use_static_data=False)
-    except ImportError as e:
-        st.error(f"Paper search not available: {e}")
-        st.session_state.paper_tools = None
-    except Exception as e:
-        st.error(f"Error initializing paper tools: {e}")
-        st.session_state.paper_tools = None
-
-if 'ollama_client' not in st.session_state:
-    st.session_state.ollama_client = OllamaClient()
+def initialize_session_state():
+    """Initialize session state variables"""
+    if 'tool_system' not in st.session_state:
+        if SYSTEM_AVAILABLE:
+            st.session_state.tool_system = ToolLearningSystem(use_static_data=False)  # Default to API, user can toggle
+            st.session_state.model_manager = ModelManager()
+        else:
+            st.session_state.tool_system = None
+            st.session_state.model_manager = None
+    
+    if 'search_history' not in st.session_state:
+        st.session_state.search_history = []
 
 def main():
-    st.title("🤖 Tool Learning Chatbot")
-    st.markdown("*Learn to route research paper queries to the right tools*")
+    """Main application function"""
+    initialize_session_state()
     
-    # Sidebar with info
-    with st.sidebar:
-        st.header("📋 Available Tools")
-        routes = st.session_state.engine.get_available_routes()
-        for route in routes:
-            st.write(f"• {route}")
-        
-        st.header("🤖 AI Engine")
-
-        ollama_status = "🟢 Connected" if st.session_state.ollama_client.available else "🔴 Offline"
-        st.write(f"Ollama: {ollama_status}")
-
-        models = ["llama3.2", "deepseek-r1", "gemma3:1b"]
-        col_label, col_select = st.columns([1, 2], gap=None, vertical_alignment="center")
-        with col_label:
-            st.markdown("Model", unsafe_allow_html=True)
-        with col_select:
-            selected_model = st.selectbox(
-                "nothing",
-                models,
-                index=models.index(st.session_state.ollama_client.model),
-                key="ollama_model_select",
-                label_visibility="collapsed"
-            )
-        if selected_model != st.session_state.ollama_client.model:
-            st.session_state.ollama_client.set_model(selected_model)
-
-        if st.session_state.ollama_client.available:
-            model_available = st.session_state.ollama_client.check_model_available()
-            st.write(f"Model Status: {'✅ Ready' if model_available else '⚠️ Not Found'}")
-        
-        st.header("📊 Data Source")
-        if st.session_state.paper_tools:
-            current_mode = "Static Data" if st.session_state.paper_tools.use_static_data else "Live APIs"
-            st.write(f"Mode: {current_mode}")
-            
-            # Show available APIs/datasets
-            stats = st.session_state.paper_tools.get_search_stats()
-            if not st.session_state.paper_tools.use_static_data:
-                st.write("**Available APIs:**")
-                for api in stats['live_databases']:
-                    st.write(f"✅ {api}")
-            else:
-                st.write(f"**Static Datasets:** {len(stats['static_databases'])}")
-            
-            # Toggle between static and live mode
-            use_static = st.toggle("Use Static Data", value=st.session_state.paper_tools.use_static_data, 
-                                 help="Toggle between live APIs (arXiv, PubMed) and static dataset files")
-            if use_static != st.session_state.paper_tools.use_static_data:
-                try:
-                    st.session_state.paper_tools = PaperTools(use_static_data=use_static)
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Error switching mode: {e}")
-        
-        st.header("📊 Session Stats")
-        st.metric("Messages", len(st.session_state.messages))
-        
-        if st.button("Clear Chat"):
-            st.session_state.messages = []
-            st.rerun()
+    # Header
+    st.title("🔬 Tool Learning System")
+    st.markdown("**Intelligent arXiv Paper Search** | 3,500 papers across 7 AI/ML topics")
     
-    # Chat interface
-    st.header("💬 Chat")
+    if not SYSTEM_AVAILABLE:
+        st.error("System not available. Please check the installation.")
+        return
     
-    # Display chat history
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
-            if "route_info" in message:
-                st.caption(f"🛤️ Route: {message['route_info']['route']} (confidence: {message['route_info']['confidence']:.3f})")
+    # Sidebar settings
+    st.sidebar.title("⚙️ Settings")
     
-    # Chat input
-    if prompt := st.chat_input("Ask about research papers..."):
-        # Add user message
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        
-        # Process with tool learning engine
-        route, confidence, explanation = st.session_state.engine.select_route(prompt)
-        
-        # Execute the selected tool and generate response with Ollama
-        paper_results = None
-        try:
-            if st.session_state.paper_tools and route in ["searchPapers", "getAuthorInfo", "getCitations"]:
-                with st.spinner("Searching for papers..."):
-                    if route == "searchPapers":
-                        paper_results = st.session_state.paper_tools.search_papers(prompt, max_results=5, database="All")
-                    elif route == "getAuthorInfo":
-                        author = extract_author_name(prompt)
-                        paper_results = st.session_state.paper_tools.search_papers(author, max_results=5, database="All")
-                    elif route == "getCitations":
-                        paper_results = st.session_state.paper_tools.search_papers(prompt, max_results=3, database="Scholar")
-            
-            # Generate response using Ollama
-            with st.spinner("Generating response..."):
-                response = st.session_state.ollama_client.generate_response(
-                    query=prompt,
-                    route=route,
-                    route_explanation=explanation,
-                    paper_results=paper_results
-                )
-                
-        except Exception as e:
-            response = f"❌ Error executing {route}: {str(e)}\n\nPlease try a different query or check your internet connection."
-        
-        # Add assistant response
-        st.session_state.messages.append({
-            "role": "assistant", 
-            "content": response,
-            "route_info": {
-                "route": route,
-                "confidence": confidence,
-                "explanation": explanation
-            }
-        })
-        
-        st.rerun()
-
-def format_search_results(results, query):
-    """Format search results for display"""
-    if not results:
-        return f"No papers found for '{query}'"
+    # Model selection
+    model_manager = st.session_state.model_manager
+    available_models = model_manager.get_installed_models()
     
-    response = f"Found {len(results)} papers for '{query}':\n\n"
-    for i, paper in enumerate(results[:5], 1):
-        title = paper.get('title', 'No title')
-        authors = ', '.join(paper.get('authors', ['Unknown']))
-        year = paper.get('year', 'Unknown')
-        response += f"{i}. **{title}**\n   Authors: {authors}\n   Year: {year}\n\n"
-    
-    return response
-
-def format_author_results(results, author):
-    """Format author search results"""
-    if not results:
-        return f"No papers found for author '{author}'"
-    
-    response = f"Papers by '{author}':\n\n"
-    for i, paper in enumerate(results[:5], 1):
-        title = paper.get('title', 'No title')
-        year = paper.get('year', 'Unknown')
-        citations = paper.get('citations', 0)
-        response += f"{i}. **{title}** ({year})\n   Citations: {citations}\n\n"
-    
-    return response
-
-def format_citation_results(results, query):
-    """Format citation search results"""
-    if not results:
-        return f"No citation information found for '{query}'"
-    
-    response = f"Citation information for '{query}':\n\n"
-    for i, paper in enumerate(results[:3], 1):
-        title = paper.get('title', 'No title')
-        citations = paper.get('citations', 0)
-        year = paper.get('year', 'Unknown')
-        response += f"{i}. **{title}** ({year})\n   Citations: {citations}\n\n"
-    
-    return response
-
-def extract_author_name(query):
-    """Extract author name from query"""
-    query_lower = query.lower()
-    # Simple extraction - look for patterns like "papers by X" or "author X"
-    if "by " in query_lower:
-        return query_lower.split("by ")[-1].strip()
-    elif "author " in query_lower:
-        return query_lower.split("author ")[-1].strip()
+    if available_models:
+        selected_model = st.sidebar.selectbox(
+            "🤖 Model",
+            available_models,
+            index=0,
+            help="Select the LLM model for route selection and response generation"
+        )
     else:
-        return query.strip()
+        selected_model = model_manager.default_model
+        st.sidebar.warning(f"No models installed. Using default: {selected_model}")
+    
+    # Data source toggle
+    use_static = st.sidebar.checkbox(
+        "📚 Use Static Dataset",
+        value=True,
+        help="Use local dataset (3,500 papers) instead of live arXiv API"
+    )
+    
+    # Search settings
+    max_results = st.sidebar.slider(
+        "📄 Max Results",
+        min_value=1,
+        max_value=15,
+        value=5,
+        help="Maximum number of papers to retrieve"
+    )
+    
+    # System status
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("📊 System Status")
+    
+    if st.session_state.tool_system:
+        stats = st.session_state.tool_system.get_statistics()
+        st.sidebar.metric("Papers Available", f"{stats.get('static_papers_count', 0):,}")
+        st.sidebar.metric("Total Searches", stats.get('total_searches', 0))
+        
+        llm_status = "✅ Available" if stats.get('llm_available') else "❌ Offline"
+        st.sidebar.text(f"LLM: {llm_status}")
+        
+        arxiv_status = "✅ Available" if stats.get('arxiv_available') else "❌ Offline"
+        st.sidebar.text(f"arXiv API: {arxiv_status}")
+    
+    # Main search interface
+    st.subheader("🔍 Search Research Papers")
+    
+    # Query input
+    query = st.text_input(
+        "Enter your research query:",
+        placeholder="e.g., find papers about BERT",
+        help="Ask about papers, authors, citations, comparisons, trends, or journals"
+    )
+    
+    # Search button
+    if st.button("🔎 Search", type="primary"):
+        if query:
+            perform_search(query, selected_model, max_results, use_static)
+        else:
+            st.warning("Please enter a search query.")
+    
+    # Help section
+    with st.expander("ℹ️ Help & Examples", expanded=False):
+        st.markdown("""
+        ### Available Routes
+        - **searchPapers**: Find papers on specific topics
+        - **getAuthorInfo**: Get author information and publications
+        - **getCitations**: Analyze citations and paper impact
+        - **getRelatedPapers**: Find related research papers
+        - **comparePapers**: Compare different papers or approaches
+        - **trendAnalysis**: Analyze research trends over time
+        - **journalAnalysis**: Analyze journals and publication venues
+        
+        ### Example Queries 
+        - "find papers about BERT"
+        - "machine learning optimization"  
+        - "deep learning research"
+        - "neural network architectures"
+        - "who is Geoffrey Hinton"
+        - "compare different optimization algorithms"
+        - "trends in machine learning"
+        
+        ### Dataset Coverage (3,500 papers)
+        - Machine Learning: optimization, algorithms, learning theory
+        - Deep Learning: neural networks, architectures, training
+        - BERT: BERT models, variants, applications
+        - Tool Learning: agent systems, tool use
+        - Plus: RAG, Hallucination detection topics
+        
+        ### Tips
+        - Use specific terms from ML/AI domains
+        - Try different phrasings if you don't get good results
+        - The system works best with topics covered in the static dataset
+        """)
+
+def perform_search(query: str, model: str, max_results: int, use_static: bool):
+    """Perform the search and display results"""
+    tool_system = st.session_state.tool_system
+    
+    # Update system settings
+    tool_system.ollama_model = model
+    tool_system.use_static_data = use_static
+    
+    start_time = time.time()
+    
+    with st.spinner("🔄 Processing your query..."):
+        try:
+            # Step 1: Route selection
+            route, confidence, explanation = tool_system.select_route(query)
+            
+            # Step 2: Paper search
+            papers = tool_system.search_papers(query, max_results=max_results)
+            
+            # Step 3: Response generation
+            response = tool_system.generate_response(query, route, papers)
+            
+            end_time = time.time()
+            
+            # Display results
+            display_results(query, route, confidence, papers, response, end_time - start_time, use_static)
+            
+            # Update search history
+            st.session_state.search_history.append({
+                'query': query,
+                'route': route,
+                'papers_count': len(papers),
+                'timestamp': datetime.now().strftime("%H:%M:%S")
+            })
+            
+        except Exception as e:
+            st.error(f"Search failed: {str(e)}")
+
+def display_results(query: str, route: str, confidence: float, papers: list, response: str, processing_time: float, use_static: bool):
+    """Display search results"""
+    st.markdown("---")
+    st.subheader("📋 Search Results")
+    
+    # Route information
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Route", route)
+    with col2:
+        st.metric("Confidence", f"{confidence:.3f}")
+    with col3:
+        st.metric("Papers Found", len(papers))
+    with col4:
+        st.metric("Time", f"{processing_time:.2f}s")
+    
+    # Data source indicator
+    source_text = "📚 Static Dataset" if use_static else "🌐 Live arXiv API"
+    st.info(f"Data source: {source_text}")
+    
+    # AI Response
+    st.subheader("🤖 AI Response")
+    st.markdown(response)
+    
+    # Papers found
+    if papers:
+        st.subheader("📚 Found Papers")
+        
+        for i, paper in enumerate(papers, 1):
+            with st.expander(f"📄 Paper {i}: {paper['title']}", expanded=i <= 3):
+                col1, col2 = st.columns([3, 1])
+                
+                with col1:
+                    st.markdown(f"**Authors:** {', '.join(paper['authors'][:5])}")
+                    st.markdown(f"**Year:** {paper['year']}")
+                    if paper.get('abstract'):
+                        st.markdown(f"**Abstract:** {paper['abstract'][:300]}...")
+                
+                with col2:
+                    st.markdown(f"**Source:** {paper.get('source', 'Unknown')}")
+                    if paper.get('arxiv_id'):
+                        st.markdown(f"**arXiv ID:** {paper['arxiv_id']}")
+                    if paper.get('categories'):
+                        st.markdown(f"**Categories:** {', '.join(paper['categories'][:3])}")
+    else:
+        st.warning("No papers found. Try different keywords or rephrase your query.")
+    
+    # Export option
+    if st.button("📁 Export Results as JSON"):
+        results = {
+            'query': query,
+            'route': route,
+            'confidence': confidence,
+            'papers_found': len(papers),
+            'papers': papers,
+            'response': response,
+            'data_source': 'static' if use_static else 'live_api',
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        json_str = json.dumps(results, indent=2, ensure_ascii=False)
+        st.download_button(
+            label="⬇️ Download JSON",
+            data=json_str,
+            file_name=f"search_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            mime="application/json"
+        )
 
 if __name__ == "__main__":
     main() 

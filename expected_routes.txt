@@ -1,84 +1,75 @@
-# Core Tool Learning Routes (7 main routes)
+# Available Routes for Tool Learning System
+# Static dataset: 3,500 papers across 7 ML/AI topics
+
+# =============================================================================
+# 7 ROUTES
+# =============================================================================
+
 searchPapers
-getAuthorInfo
+getAuthorInfo  
 getCitations
 getRelatedPapers
 comparePapers
 trendAnalysis
 journalAnalysis
 
-# Route Combinations (2-step workflows)
-searchPapers -> getAuthorInfo
-searchPapers -> getCitations
-searchPapers -> getRelatedPapers
-getAuthorInfo -> searchPapers
-getAuthorInfo -> getCitations
-getCitations -> searchPapers
-getCitations -> getRelatedPapers
-getCitations -> comparePapers
-getRelatedPapers -> searchPapers
-getRelatedPapers -> getCitations
-getRelatedPapers -> comparePapers
-comparePapers -> getCitations
-comparePapers -> getRelatedPapers
-trendAnalysis -> searchPapers
-trendAnalysis -> getCitations
-journalAnalysis -> searchPapers
+# =============================================================================
+# WORKING EXAMPLES
+# =============================================================================
 
-# Complex Route Chains (3-step workflows)
-searchPapers -> getCitations -> getAuthorInfo
-searchPapers -> getAuthorInfo -> getCitations
-getAuthorInfo -> searchPapers -> getCitations
-getCitations -> searchPapers -> getRelatedPapers
-getCitations -> getRelatedPapers -> comparePapers
-getRelatedPapers -> getCitations -> comparePapers
-trendAnalysis -> searchPapers -> getCitations
-journalAnalysis -> searchPapers -> getCitations
+## searchPapers (Find research papers)
+find papers about BERT
+machine learning optimization
+deep learning research  
+neural network architectures
+transformer models
 
-# Comprehensive Test Distribution (70 Test Cases)
-# searchPapers (23 cases)
-# - Basic search: 4 cases
-# - Temporal search: 3 cases  
-# - Technical search: 4 cases
-# - Domain search: 6 cases
-# - Specialized search: 5 cases
-# - Ambiguous queries: 2 cases
+## getAuthorInfo (Author information)
+who is Geoffrey Hinton
+tell me about Yann LeCun
+research by Yoshua Bengio
+papers by Ian Goodfellow
 
-# getAuthorInfo (15 cases)
-# - Famous authors: 6 cases
-# - Specific authors: 6 cases
-# - Domain authors: 3 cases
+## getCitations (Citation analysis)
+citation count for BERT paper
+impact factor of machine learning research
+citation analysis for optimization paper
 
-# getCitations (10 cases)
-# - Basic citation: 2 cases
-# - Impact analysis: 2 cases
-# - Bibliometric analysis: 3 cases
-# - Domain citations: 3 cases
+## getRelatedPapers (Find related work)
+papers related to BERT
+similar research to machine learning
+connected work to deep learning
 
-# comparePapers (8 cases)
-# - Model comparison: 4 cases
-# - Architecture comparison: 2 cases
-# - Method comparison: 2 cases
+## comparePapers (Compare approaches)
+compare BERT and GPT models
+difference between optimization methods
+BERT versus other transformer models
 
-# trendAnalysis (6 cases)
-# - Field trends: 3 cases
-# - Domain trends: 3 cases
+## trendAnalysis (Research trends)
+trends in machine learning
+evolution of deep learning
+progress in BERT research
 
-# journalAnalysis (3 cases)
-# - Journal metrics: 1 case
-# - Venue recommendation: 1 case
-# - Domain venues: 1 case
+## journalAnalysis (Publication venues)
+best publication venues for ML research
+top conferences for AI papers
+best venues for deep learning
 
-# getRelatedPapers (5 cases)
-# - Related search: 5 cases
+# =============================================================================
+# DATASET (3,500 Papers)
+# =============================================================================
 
-# Multi-Route Cases (4 cases)
-# - getRelatedPapers -> getCitations -> comparePapers: 2 cases
-# - searchPapers -> getAuthorInfo -> getCitations: 1 case
-# - trendAnalysis -> searchPapers -> comparePapers: 1 case
+machine_learning.jsonl: 500 papers - optimization, algorithms, learning theory
+deep_learning.jsonl: 500 papers - neural networks, architectures, training
+bert.jsonl: 500 papers - BERT models, variants, applications
+tool_learning.jsonl: 500 papers - agent systems, tool use, reasoning
+rag.jsonl: 500 papers - retrieval systems, knowledge integration
+hallucination.jsonl: 500 papers - hallucination detection, factuality
+transformers.jsonl: 500 papers - mathematical transformations (mixed content)
 
-# Total Coverage: 70 test cases across all routes and combinations
-# All 7 core routes are fully tested with comprehensive edge cases
-# Multi-route workflows test complex query understanding
-# Difficulty levels: Easy (12), Medium (33), Hard (25)
-# Data sources: arXiv, PubMed, Scholar, bioRxiv, medRxiv, chemRxiv
+# =============================================================================
+# MODELS
+# =============================================================================
+
+llama3.2 - Balanced performance (recommended)
+deepseek-r1 - Strong analytical capabilities
