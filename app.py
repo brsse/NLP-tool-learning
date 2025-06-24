@@ -20,6 +20,18 @@ st.set_page_config(
     layout="wide"
 )
 
+
+st.markdown(
+    """
+    <style>
+        [data-testid="stSidebar"] {
+            width: 270px;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Initialize session state
 if 'messages' not in st.session_state:
     st.session_state.messages = []
@@ -51,9 +63,25 @@ def main():
             st.write(f"• {route}")
         
         st.header("🤖 AI Engine")
+
         ollama_status = "🟢 Connected" if st.session_state.ollama_client.available else "🔴 Offline"
         st.write(f"Ollama: {ollama_status}")
-        st.write(f"Model: {st.session_state.ollama_client.model}")
+
+        models = ["llama3.2", "deepseek-r1", "gemma3:1b"]
+        col_label, col_select = st.columns([1, 2], gap=None, vertical_alignment="center")
+        with col_label:
+            st.markdown("Model", unsafe_allow_html=True)
+        with col_select:
+            selected_model = st.selectbox(
+                "nothing",
+                models,
+                index=models.index(st.session_state.ollama_client.model),
+                key="ollama_model_select",
+                label_visibility="collapsed"
+            )
+        if selected_model != st.session_state.ollama_client.model:
+            st.session_state.ollama_client.set_model(selected_model)
+
         if st.session_state.ollama_client.available:
             model_available = st.session_state.ollama_client.check_model_available()
             st.write(f"Model Status: {'✅ Ready' if model_available else '⚠️ Not Found'}")

@@ -14,13 +14,17 @@ from prompts.base_prompts import PromptTemplates, SystemMessages
 
 logger = logging.getLogger(__name__)
 
+
 class OllamaClient:
     """Client for interacting with Ollama API"""
     
-    def __init__(self, base_url: str = "http://localhost:11434"):
+    def __init__(self, base_url: str = "http://localhost:11434", model: str = "llama3.2"):
         self.base_url = base_url.rstrip('/')
-        self.model = "llama3.2"  # Fixed to only use llama3.2
+        self.model = model
         self.available = self._check_availability()
+    
+    def set_model(self, model_name: str):
+        self.model = model_name
         
     def _check_availability(self) -> bool:
         """Check if Ollama service is available"""
@@ -77,7 +81,7 @@ class OllamaClient:
         response = requests.post(
             f"{self.base_url}/api/generate",
             json=payload,
-            timeout=30
+            timeout=60
         )
         
         if response.status_code == 200:
@@ -92,21 +96,22 @@ class OllamaClient:
         return PromptTemplates.build_fallback_response(query, route, route_explanation, paper_results)
     
     def check_model_available(self) -> bool:
-        """Check if llama3.2 model is available"""
+        """Check if the currently selected model is available on Ollama"""
         if not self.available:
             return False
-        
+
         try:
             response = requests.get(f"{self.base_url}/api/tags")
             if response.status_code == 200:
                 data = response.json()
                 models = [model['name'] for model in data.get('models', [])]
-                return any('llama3.2' in model for model in models)
+                return any(self.model in model for model in models)
+
         except Exception as e:
             logger.error(f"Failed to check model: {e}")
-        
-        return False
 
+        return False
+    
 def main():
     """Test the Ollama client"""
     print("🤖 Testing Ollama Client")
@@ -118,7 +123,7 @@ def main():
     
     if client.available:
         model_available = client.check_model_available()
-        print(f"llama3.2 model available: {model_available}")
+        print(f"deepseek-r1 model available: {model_available}")
         print(f"Using model: {client.model}")
     
     # Test query
