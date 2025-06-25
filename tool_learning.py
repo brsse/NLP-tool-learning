@@ -18,6 +18,13 @@ from datetime import datetime
 from typing import Dict, List, Any, Tuple, Optional
 import logging
 
+# Import prompts
+from prompts import (
+    get_route_selection_prompt,
+    get_response_generation_prompt, 
+    get_fallback_response
+)
+
 # Import arXiv library
 try:
     import arxiv
@@ -73,23 +80,7 @@ class ToolLearningSystem:
     
     def _select_route_llm(self, query: str) -> Tuple[List[str], float, str]:
         """Use LLM for multi-route selection"""
-        prompt = f"""
-You are a route selector for a research paper tool learning system.
-
-Available routes:
-- searchPapers: Find research papers on specific topics
-- getAuthorInfo: Get author information and their publications  
-- getCitations: Analyze citations and paper impact
-- getRelatedPapers: Find related research papers
-- comparePapers: Compare different papers or methods
-- trendAnalysis: Analyze research trends over time
-- journalAnalysis: Analyze journals and venues
-
-Query: "{query}"
-
-Select the most appropriate route(s). You can select one or multiple routes if the query would benefit from multiple approaches.
-Respond with route names separated by commas (e.g., "searchPapers" or "searchPapers, getAuthorInfo").
-"""
+        prompt = get_route_selection_prompt(query)
         
         try:
             response = requests.post(
@@ -345,28 +336,8 @@ Respond with route names separated by commas (e.g., "searchPapers" or "searchPap
         if not self.llm_available:
             return self._generate_fallback_response(query, routes, papers)
         
-        # Prepare paper context
-        paper_context = ""
-        if papers:
-            paper_context = "\n\nRelevant papers found:\n"
-            for i, paper in enumerate(papers[:5], 1):
-                paper_context += f"{i}. {paper['title']}\n"
-                paper_context += f"   Authors: {', '.join(paper['authors'][:3])}\n"
-                paper_context += f"   Year: {paper['year']}\n"
-                if paper['abstract']:
-                    paper_context += f"   Abstract: {paper['abstract'][:200]}...\n"
-                paper_context += "\n"
-        
-        # Generate prompt for multi-route response
-        routes_str = ', '.join(routes)
-        prompt = f"""You are a helpful research assistant. Answer the user's query using the provided papers.
-
-Selected Routes: {routes_str}
-Query: {query}
-
-{paper_context}
-
-Provide a comprehensive response that addresses the query using the selected routes. Organize your response to cover all relevant aspects."""
+        # Use centralized prompt generation
+        prompt = get_response_generation_prompt(routes, query, papers)
         
         try:
             response = requests.post(
@@ -390,24 +361,7 @@ Provide a comprehensive response that addresses the query using the selected rou
     
     def _generate_fallback_response(self, query: str, routes: List[str], papers: List[Dict[str, Any]]) -> str:
         """Generate fallback response when LLM is not available"""
-        if not papers:
-            return f"I searched for papers related to '{query}' but didn't find any relevant results in the dataset."
-        
-        routes_str = ', '.join(routes)
-        response = f"Based on your query '{query}' using routes [{routes_str}], I found {len(papers)} relevant papers:\n\n"
-        
-        for i, paper in enumerate(papers[:5], 1):
-            response += f"{i}. **{paper['title']}**\n"
-            response += f"   Authors: {', '.join(paper['authors'][:3])}\n"
-            response += f"   Year: {paper['year']}\n"
-            if paper['abstract']:
-                response += f"   Abstract: {paper['abstract'][:150]}...\n"
-            response += "\n"
-        
-        if len(papers) > 5:
-            response += f"...and {len(papers) - 5} more papers.\n"
-        
-        return response
+        return get_fallback_response(query, routes, papers)
     
     def get_statistics(self) -> Dict[str, Any]:
         """Get system statistics"""
