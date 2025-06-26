@@ -1,0 +1,35 @@
+{
+  "test_name": "Single Route vs Multi-Route",
+  "timestamp": "2025-06-26T16:18:29.624605",
+  "models_tested": [
+    "llama3.2",
+    "deepseek-r1"
+  ],
+  "sample_size": 3,
+  "comparison_results": {
+    "llama3.2": {
+      "single_route": {
+        "avg_quality": 0.73315873015873,
+        "avg_time": 66.80557998021443
+      },
+      "multi_route": {
+        "avg_quality": 0.6586666666666666,
+        "avg_time": 77.75659529368083
+      },
+      "quality_improvement": -0.07449206349206339,
+      "winner": "single_route"
+    },
+    "deepseek-r1": {
+      "single_route": {
+        "avg_quality": 0.7375238095238096,
+        "avg_time": 0.01640152931213379
+      },
+      "multi_route": {
+        "avg_quality": 0.7375238095238096,
+        "avg_time": 0.0029853185017903647
+      },
+      "quality_improvement": 0.0,
+      "winner": "single_route"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "test_name": "Cross-Model Consistency",
+  "timestamp": "2025-06-26T16:35:02.890054",
+  "models_tested": [
+    "llama3.2",
+    "deepseek-r1"
+  ],
+  "sample_size": 3,
+  "model_results": {
+    "llama3.2": {
+      "avg_quality": 0.6333015873015874,
+      "avg_time": 101.53041076660156,
+      "responses": [
+        "**Comprehensive Analysis of Machine Learning Optimization Papers**\n\nThis analysis combines the outputs from three selected routes: searchPapers, getRelatedPapers, and comparePapers to provide a detail",
+        "**Comprehensive Analysis of Adversarial Machine Learning Papers**\n\nThis report presents a comprehensive analysis of relevant papers in the field of adversarial machine learning, utilizing a multi-rout",
+        "**Comprehensive Analysis of Healthcare Machine Learning Applications**\n\nOur multi-route intelligence approach involves analyzing search papers and citation data to provide a comprehensive understandin"
+      ]
+    },
+    "deepseek-r1": {
+      "avg_quality": 0.7375238095238096,
+      "avg_time": 0.013134320576985678,
+      "responses": [
+        "Based on your query 'find papers about machine learning optimization' using routes [searchPapers], I found 5 relevant papers:\n\n\n1. **Tool Unlearning for Tool-Augmented LLMs**\n   Authors: Jiali Cheng, ",
+        "Based on your query 'search for adversarial machine learning papers' using routes [searchPapers], I found 5 relevant papers:\n\n\n1. **Tool Unlearning for Tool-Augmented LLMs**\n   Authors: Jiali Cheng, H",
+        "Based on your query 'healthcare machine learning applications' using routes [searchPapers], I found 5 relevant papers:\n\n\n1. **Tool Unlearning for Tool-Augmented LLMs**\n   Authors: Jiali Cheng, Hadi Am"
+      ]
+    }
+  },
+  "consistency_metrics": {
+    "overall_consistency": 0.058785529715762265,
+    "most_consistent_model": "deepseek-r1",
+    "quality_variance": 0.0027155679012345678
+  }
+}

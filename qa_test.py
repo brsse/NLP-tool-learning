@@ -478,12 +478,11 @@ def main():
         print("❌ Tool learning system not available!")
         return
     
-    # Run sample test with first 5 test cases to verify functionality
     results = test_suite.run_test(
         models=None,  # Use all available models
         test_static=True,
         test_dynamic=True,
-        sample_size=5  # Just 5 test cases for quick verification
+        sample_size=5  
     )
     
     if 'error' in results:

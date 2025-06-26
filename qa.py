@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Simple QA Dataset for Tool Learning System
 Realistic expected answers based on actual arxiv dataset content.
@@ -7,7 +6,7 @@ Realistic expected answers based on actual arxiv dataset content.
 from typing import Dict, List, Any
 
 # ============================================================================
-# SIMPLE QA DATASET WITH REALISTIC ANSWERS
+# SIMPLE QA DATASET 
 # ============================================================================
 
 COMPREHENSIVE_QA_DATASET = [
@@ -26,9 +25,9 @@ COMPREHENSIVE_QA_DATASET = [
         'query': 'search for adversarial machine learning papers', 
         'expected_route': 'searchPapers', 
         'difficulty': 'medium', 
-        'expected_answer': 'Found adversarial ML papers including "An Optimal Control View of Adversarial Machine Learning" by Xiaojin Zhu (2018) which describes adversarial attacks using optimal control theory.',
+        'expected_answer': 'Found adversarial ML papers including "Adversarial Attacks and Defenses in Machine Learning-Powered Networks: A Contemporary Survey" by Yulong Wang et al. (2023) which covers modern adversarial attacks and defense techniques in deep learning networks.',
         'expected_papers_min': 2,
-        'expected_keywords': ['adversarial', 'machine learning', 'Xiaojin Zhu', 'optimal control']
+        'expected_keywords': ['adversarial', 'machine learning', 'attacks', 'defense']
     },
     {
         'id': 3, 
@@ -64,7 +63,7 @@ COMPREHENSIVE_QA_DATASET = [
         'query': 'who is Elad Hazan', 
         'expected_route': 'getAuthorInfo', 
         'difficulty': 'medium', 
-        'expected_answer': 'Elad Hazan is author of "Lecture Notes: Optimization for Machine Learning" (2019), derived from courses at Princeton University. Research focuses on optimization for machine learning.',
+        'expected_answer': 'Elad Hazan is a professor of Computer Science at Princeton University and author of "Lecture Notes: Optimization for Machine Learning" (2019). His research focuses on machine learning and mathematical optimization.',
         'expected_papers_min': 1,
         'expected_keywords': ['Elad Hazan', 'optimization', 'Princeton', 'machine learning']
     },
@@ -73,7 +72,7 @@ COMPREHENSIVE_QA_DATASET = [
         'query': 'research by Wei-Hung Weng', 
         'expected_route': 'getAuthorInfo', 
         'difficulty': 'medium', 
-        'expected_answer': 'Wei-Hung Weng authored "Machine Learning for Clinical Predictive Analytics" and "Representation Learning for Electronic Health Records". Focuses on clinical machine learning applications.',
+        'expected_answer': 'Wei-Hung Weng authored "Machine Learning for Clinical Predictive Analytics" and "Representation Learning for Electronic Health Records". His research focuses on clinical machine learning applications.',
         'expected_papers_min': 1,
         'expected_keywords': ['Wei-Hung Weng', 'clinical', 'healthcare', 'machine learning']
     },
@@ -135,7 +134,7 @@ COMPREHENSIVE_QA_DATASET = [
         'difficulty': 'easy', 
         'expected_answer': 'Supervised learning uses labeled data for prediction while unsupervised learning finds patterns in unlabeled data. Different applications and evaluation methods.',
         'expected_papers_min': 2,
-        'expected_keywords': ['compare', 'supervised', 'unsupervised', 'learning']
+        'expected_keywords': ['labeled', 'supervised', 'unsupervised', 'learning']
     },
     {
         'id': 14, 
@@ -173,9 +172,9 @@ COMPREHENSIVE_QA_DATASET = [
         'query': 'best venues for machine learning research', 
         'expected_route': 'journalAnalysis', 
         'difficulty': 'medium', 
-        'expected_answer': 'Top ML venues include ICML, NeurIPS, JMLR, and specialized conferences for domains like healthcare AI and quantum computing.',
+        'expected_answer': 'Top ML venues include journals like JMLR and TPAMI, and conferences like ICML, ICLR, NeurIPS, and other specialized conferences for domains like healthcare AI and quantum computing.',
         'expected_papers_min': 1,
-        'expected_keywords': ['venues', 'machine learning', 'ICML', 'conferences']
+        'expected_keywords': ['journals', 'JMLR', 'ICML', 'conferences']
     },
     {
         'id': 18, 
@@ -193,7 +192,7 @@ COMPREHENSIVE_QA_DATASET = [
         'query': 'find papers by Elad Hazan on optimization', 
         'expected_route': 'searchPapers, getAuthorInfo', 
         'difficulty': 'medium', 
-        'expected_answer': 'Elad Hazan from Princeton authored "Lecture Notes: Optimization for Machine Learning" (2019). The paper covers optimization fundamentals for ML from university courses and tutorials.',
+        'expected_answer': 'Elad Hazan authored "Lecture Notes: Optimization for Machine Learning" (2019). The paper covers optimization fundamentals for ML derived from Princeton University courses and tutorials.',
         'expected_papers_min': 1,
         'expected_keywords': ['Elad Hazan', 'optimization', 'Princeton', 'lecture notes']
     },

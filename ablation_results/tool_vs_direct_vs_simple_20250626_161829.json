@@ -1,0 +1,41 @@
+{
+  "test_name": "Tool Learning vs Direct vs Simple",
+  "timestamp": "2025-06-26T16:11:49.056210",
+  "models_tested": [
+    "llama3.2",
+    "deepseek-r1"
+  ],
+  "sample_size": 3,
+  "comparison_results": {
+    "llama3.2": {
+      "tool_learning": {
+        "avg_quality": 0.7439047619047617,
+        "avg_time": 68.35974669456482
+      },
+      "direct_search": {
+        "avg_quality": 0.712936507936508,
+        "avg_time": 65.1274019877116
+      },
+      "simple_baseline": {
+        "avg_quality": 0.5577460317460318,
+        "avg_time": 2.304712931315104e-06
+      },
+      "winner": "tool_learning"
+    },
+    "deepseek-r1": {
+      "tool_learning": {
+        "avg_quality": 0.7375238095238096,
+        "avg_time": 0.011404752731323242
+      },
+      "direct_search": {
+        "avg_quality": 0.7375238095238096,
+        "avg_time": 0.0011246999104817708
+      },
+      "simple_baseline": {
+        "avg_quality": 0.5577460317460318,
+        "avg_time": 2.384185791015625e-07
+      },
+      "winner": "tool_learning"
+    }
+  }
+}
