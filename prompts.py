@@ -19,15 +19,18 @@ Query: "{query}"
 Select the most appropriate route(s). You can select one or multiple routes if the query would benefit from multiple approaches.
 Respond with route names separated by commas (e.g., "searchPapers" or "searchPapers, getAuthorInfo")."""
 
-# Response Generation Prompt  
-RESPONSE_GENERATION_PROMPT = """You are a helpful research assistant. Answer the user's query using the provided papers.
+# Enhanced Response Generation Prompt for Tool Learning Excellence
+RESPONSE_GENERATION_PROMPT = """You are an expert research assistant with multi-route intelligence. Use the selected routes to provide a comprehensive analysis.
 
-Selected Routes: {routes}
 Query: {query}
+Selected Routes: {routes}
 
 {paper_context}
 
-Provide a comprehensive response that addresses the query using the selected routes. Organize your response to cover all relevant aspects."""
+ROUTE-SPECIFIC INSTRUCTIONS:
+{route_instructions}
+
+Provide a detailed, well-structured response that demonstrates the value of multi-route analysis. Address each selected route comprehensively and show how combining multiple perspectives provides superior insights."""
 
 # No Papers Found Response
 RESPONSE_NO_PAPERS = """I searched for papers related to "{query}" but didn't find any relevant results in the dataset.
@@ -81,18 +84,40 @@ def get_route_selection_prompt(query: str) -> str:
     """Get formatted route selection prompt"""
     return ROUTE_SELECTION_PROMPT.format(query=query)
 
+def get_route_specific_instructions(routes: list) -> str:
+    """Generate route-specific instructions for enhanced tool learning"""
+    instructions = []
+    
+    route_guides = {
+        'searchPapers': '📄 SEARCH: Identify the most relevant papers and summarize key findings from each.',
+        'getAuthorInfo': '👨‍🔬 AUTHORS: Analyze author expertise, affiliations, and research impact in this domain.',
+        'getCitations': '📈 CITATIONS: Examine citation counts, impact metrics, and influence patterns.',
+        'getRelatedPapers': '🔗 RELATED WORK: Connect findings to broader research context and identify relationships.',
+        'comparePapers': '⚖️ COMPARISON: Systematically compare approaches, methods, and results across papers.',
+        'trendAnalysis': '📊 TRENDS: Analyze temporal patterns, evolution, and emerging directions.',
+        'journalAnalysis': '🏛️ VENUES: Evaluate publication venues, impact factors, and research quality indicators.'
+    }
+    
+    for route in routes:
+        if route in route_guides:
+            instructions.append(route_guides[route])
+    
+    return '\n'.join(instructions) if instructions else '📋 Provide a comprehensive analysis of the research papers.'
+
 def get_response_generation_prompt(routes: list, query: str, papers: list) -> str:
-    """Get formatted response generation prompt"""
+    """Get enhanced response generation prompt with route-specific intelligence"""
     if not papers:
         return RESPONSE_NO_PAPERS.format(query=query)
     
     routes_str = ', '.join(routes) if isinstance(routes, list) else str(routes)
     paper_context = format_papers_for_context(papers)
+    route_instructions = get_route_specific_instructions(routes)
     
     return RESPONSE_GENERATION_PROMPT.format(
         routes=routes_str, 
         query=query, 
-        paper_context=paper_context
+        paper_context=paper_context,
+        route_instructions=route_instructions
     )
 
 def get_fallback_response(query: str, routes: list, papers: list) -> str:

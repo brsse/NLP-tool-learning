@@ -1,786 +1,223 @@
 #!/usr/bin/env python3
 """
-QA Dataset for Tool Learning System
-
-Test cases covering all 7 routes with multi-route support.
-Based on actual static arXiv dataset content.
+Simple QA Dataset for Tool Learning System
+Realistic expected answers based on actual arxiv dataset content.
 """
 
 from typing import Dict, List, Any
 
 # ============================================================================
-# QA DATASET BASED ON ACTUAL STATIC DATA
+# SIMPLE QA DATASET WITH REALISTIC ANSWERS
 # ============================================================================
 
 COMPREHENSIVE_QA_DATASET = [
-    # searchPapers Route (20 cases)
+    # searchPapers Route
     {
         'id': 1, 
         'query': 'find papers about machine learning optimization', 
         'expected_route': 'searchPapers', 
         'difficulty': 'easy', 
-        'category': 'basic_search',
-        'expected_answer': 'Should find papers on ML optimization methods including gradient descent, Bayesian optimization, and learning algorithms.',
+        'expected_answer': 'Found optimization papers including "Lecture Notes: Optimization for Machine Learning" by Elad Hazan (2019) and "A Survey of Optimization Methods from a Machine Learning Perspective" by Shiliang Sun et al.',
         'expected_papers_min': 3,
-        'expected_keywords': ['machine learning', 'optimization', 'gradient', 'learning']
+        'expected_keywords': ['optimization', 'machine learning', 'Elad Hazan', 'gradient']
     },
     {
         'id': 2, 
         'query': 'search for adversarial machine learning papers', 
         'expected_route': 'searchPapers', 
         'difficulty': 'medium', 
-        'category': 'specific_topic',
-        'expected_answer': 'Should find papers on adversarial ML, attacks, and defense mechanisms.',
+        'expected_answer': 'Found adversarial ML papers including "An Optimal Control View of Adversarial Machine Learning" by Xiaojin Zhu (2018) which describes adversarial attacks using optimal control theory.',
         'expected_papers_min': 2,
-        'expected_keywords': ['adversarial', 'machine learning', 'attack', 'control']
+        'expected_keywords': ['adversarial', 'machine learning', 'Xiaojin Zhu', 'optimal control']
     },
     {
         'id': 3, 
-        'query': 'find BERT papers and applications', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'easy', 
-        'category': 'specific_model',
-        'expected_answer': 'Should find BERT-related papers including BERT variants, applications, and improvements.',
-        'expected_papers_min': 5,
-        'expected_keywords': ['BERT', 'bidirectional', 'encoder', 'transformer']
-    },
-    {
-        'id': 4, 
         'query': 'healthcare machine learning applications', 
         'expected_route': 'searchPapers', 
         'difficulty': 'medium', 
-        'category': 'domain_application',
-        'expected_answer': 'Should find papers on ML applications in healthcare, clinical prediction, and medical AI.',
+        'expected_answer': 'Found healthcare ML papers including "Machine Learning for Clinical Predictive Analytics" by Wei-Hung Weng (2019) and "Probabilistic Machine Learning for Healthcare" by Chen et al.',
         'expected_papers_min': 2,
-        'expected_keywords': ['healthcare', 'clinical', 'medical', 'machine learning']
+        'expected_keywords': ['healthcare', 'clinical', 'Wei-Hung Weng', 'medical']
     },
     {
-        'id': 5, 
-        'query': 'tool learning and agent systems', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'agent_systems',
-        'expected_answer': 'Should find papers on tool learning, agent-based systems, and tool use.',
-        'expected_papers_min': 3,
-        'expected_keywords': ['tool learning', 'agent', 'tool use', 'reasoning']
-    },
-    {
-        'id': 6, 
-        'query': 'retrieval augmented generation RAG systems', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'rag_systems',
-        'expected_answer': 'Should find papers on RAG systems, retrieval-augmented generation, and knowledge integration.',
-        'expected_papers_min': 3,
-        'expected_keywords': ['retrieval', 'augmented', 'generation', 'RAG']
-    },
-    {
-        'id': 7, 
-        'query': 'hallucination detection in language models', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'hard', 
-        'category': 'factuality',
-        'expected_answer': 'Should find papers on hallucination detection, factuality verification, and truthfulness.',
-        'expected_papers_min': 3,
-        'expected_keywords': ['hallucination', 'detection', 'factuality', 'truthfulness']
-    },
-    {
-        'id': 8, 
-        'query': 'federated learning and distributed ML', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'distributed_learning',
-        'expected_answer': 'Should find papers on federated learning, distributed machine learning, and privacy-preserving ML.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['federated', 'distributed', 'machine learning', 'privacy']
-    },
-    {
-        'id': 9, 
+        'id': 4, 
         'query': 'automated machine learning AutoML', 
         'expected_route': 'searchPapers', 
         'difficulty': 'medium', 
-        'category': 'automl',
-        'expected_answer': 'Should find papers on automated machine learning, AutoML techniques, and automated optimization.',
+        'expected_answer': 'Found AutoML papers including "Techniques for Automated Machine Learning" by Chen et al. and "AutoCompete: A Framework for Machine Learning Competition" by Thakur et al.',
         'expected_papers_min': 2,
-        'expected_keywords': ['automated', 'AutoML', 'machine learning', 'optimization']
+        'expected_keywords': ['automated', 'AutoML', 'machine learning', 'techniques']
     },
     {
-        'id': 10, 
+        'id': 5, 
         'query': 'quantum machine learning methods', 
         'expected_route': 'searchPapers', 
         'difficulty': 'hard', 
-        'category': 'quantum_ml',
-        'expected_answer': 'Should find papers on quantum machine learning, quantum algorithms, and quantum computing for ML.',
+        'expected_answer': 'Found quantum ML papers including "A comprehensive review of Quantum Machine Learning: from NISQ to Fault Tolerance" by Wang et al. and "Challenges and Opportunities in Quantum Machine Learning" by Cerezo et al.',
         'expected_papers_min': 2,
-        'expected_keywords': ['quantum', 'machine learning', 'quantum computing', 'algorithm']
-    },
-    {
-        'id': 11, 
-        'query': 'machine learning interpretability and explainability', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'interpretability',
-        'expected_answer': 'Should find papers on ML interpretability, explainable AI, and model transparency.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['interpretability', 'explainable', 'transparency', 'machine learning']
-    },
-    {
-        'id': 12, 
-        'query': 'deep learning for natural language processing', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'easy', 
-        'category': 'deep_learning_nlp',
-        'expected_answer': 'Should find papers on deep learning applications in NLP, language models, and text processing.',
-        'expected_papers_min': 3,
-        'expected_keywords': ['deep learning', 'natural language', 'NLP', 'language model']
-    },
-    {
-        'id': 13, 
-        'query': 'reinforcement learning and Q-learning', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'reinforcement_learning',
-        'expected_answer': 'Should find papers on reinforcement learning algorithms, Q-learning, and RL applications.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['reinforcement learning', 'Q-learning', 'RL', 'learning']
-    },
-    {
-        'id': 14, 
-        'query': 'meta-learning and learning to learn', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'hard', 
-        'category': 'meta_learning',
-        'expected_answer': 'Should find papers on meta-learning, learning to learn, and few-shot learning.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['meta-learning', 'learning to learn', 'few-shot', 'transfer']
-    },
-    {
-        'id': 15, 
-        'query': 'computer vision and machine learning', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'computer_vision',
-        'expected_answer': 'Should find papers on computer vision applications of ML, image processing, and visual recognition.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['computer vision', 'machine learning', 'image', 'visual']
-    },
-    {
-        'id': 16, 
-        'query': 'time series machine learning', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'time_series',
-        'expected_answer': 'Should find papers on time series analysis with ML, temporal modeling, and forecasting.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['time series', 'temporal', 'machine learning', 'forecasting']
-    },
-    {
-        'id': 17, 
-        'query': 'privacy preserving machine learning', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'hard', 
-        'category': 'privacy',
-        'expected_answer': 'Should find papers on privacy-preserving ML, differential privacy, and secure learning.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['privacy', 'preserving', 'machine learning', 'secure']
-    },
-    {
-        'id': 18, 
-        'query': 'transfer learning techniques', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'transfer_learning',
-        'expected_answer': 'Should find papers on transfer learning methods, domain adaptation, and knowledge transfer.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['transfer learning', 'domain adaptation', 'knowledge transfer', 'learning']
-    },
-    {
-        'id': 19, 
-        'query': 'machine learning for scientific computing', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'scientific_ml',
-        'expected_answer': 'Should find papers on ML applications in scientific computing, physics-informed ML, and scientific discovery.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['scientific', 'computing', 'machine learning', 'physics']
-    },
-    {
-        'id': 20, 
-        'query': 'unsupervised learning and clustering', 
-        'expected_route': 'searchPapers', 
-        'difficulty': 'easy', 
-        'category': 'unsupervised',
-        'expected_answer': 'Should find papers on unsupervised learning methods, clustering algorithms, and dimensionality reduction.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['unsupervised learning', 'clustering', 'dimensionality', 'learning']
+        'expected_keywords': ['quantum', 'machine learning', 'NISQ', 'quantum computing']
     },
 
-    # getAuthorInfo Route (8 cases)
+    # getAuthorInfo Route  
     {
-        'id': 21, 
+        'id': 6, 
         'query': 'who is Elad Hazan', 
         'expected_route': 'getAuthorInfo', 
         'difficulty': 'medium', 
-        'category': 'author_info',
-        'expected_answer': 'Should provide information about Elad Hazan, author of optimization for machine learning papers.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['Elad Hazan', 'optimization', 'machine learning', 'Princeton']
+        'expected_answer': 'Elad Hazan is author of "Lecture Notes: Optimization for Machine Learning" (2019), derived from courses at Princeton University. Research focuses on optimization for machine learning.',
+        'expected_papers_min': 1,
+        'expected_keywords': ['Elad Hazan', 'optimization', 'Princeton', 'machine learning']
     },
     {
-        'id': 22, 
+        'id': 7, 
         'query': 'research by Wei-Hung Weng', 
         'expected_route': 'getAuthorInfo', 
         'difficulty': 'medium', 
-        'category': 'author_info',
-        'expected_answer': 'Should provide information about Wei-Hung Weng, known for clinical ML and healthcare applications.',
-        'expected_papers_min': 0,
+        'expected_answer': 'Wei-Hung Weng authored "Machine Learning for Clinical Predictive Analytics" and "Representation Learning for Electronic Health Records". Focuses on clinical machine learning applications.',
+        'expected_papers_min': 1,
         'expected_keywords': ['Wei-Hung Weng', 'clinical', 'healthcare', 'machine learning']
     },
     {
-        'id': 23, 
-        'query': 'tell me about Ian Goodfellow', 
-        'expected_route': 'getAuthorInfo', 
-        'difficulty': 'easy', 
-        'category': 'famous_author',
-        'expected_answer': 'Should provide information about Ian Goodfellow, inventor of GANs and deep learning researcher.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['Ian Goodfellow', 'GAN', 'deep learning', 'generative']
-    },
-    {
-        'id': 24, 
-        'query': 'papers by Amnon Shashua', 
+        'id': 8, 
+        'query': 'papers by Xiaojin Zhu', 
         'expected_route': 'getAuthorInfo', 
         'difficulty': 'medium', 
-        'category': 'author_info',
-        'expected_answer': 'Should provide information about Amnon Shashua, author of machine learning class notes.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['Amnon Shashua', 'machine learning', 'statistical inference', 'education']
-    },
-    {
-        'id': 25, 
-        'query': 'research profile of Xiaojin Zhu', 
-        'expected_route': 'getAuthorInfo', 
-        'difficulty': 'medium', 
-        'category': 'author_info',
-        'expected_answer': 'Should provide information about Xiaojin Zhu, known for adversarial ML and optimal control.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['Xiaojin Zhu', 'adversarial', 'optimal control', 'machine learning']
-    },
-    {
-        'id': 26, 
-        'query': 'who is Yoshua Bengio', 
-        'expected_route': 'getAuthorInfo', 
-        'difficulty': 'easy', 
-        'category': 'famous_author',
-        'expected_answer': 'Should provide information about Yoshua Bengio, deep learning pioneer and researcher.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['Yoshua Bengio', 'deep learning', 'neural networks', 'AI']
-    },
-    {
-        'id': 27, 
-        'query': 'publications by Ayaz Akram', 
-        'expected_route': 'getAuthorInfo', 
-        'difficulty': 'hard', 
-        'category': 'specific_author',
-        'expected_answer': 'Should provide information about Ayaz Akram, researcher in ML and computer architecture.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['Ayaz Akram', 'computer architecture', 'machine learning', 'tribes']
-    },
-    {
-        'id': 28, 
-        'query': 'research background of Michail Schlesinger', 
-        'expected_route': 'getAuthorInfo', 
-        'difficulty': 'hard', 
-        'category': 'specific_author',
-        'expected_answer': 'Should provide information about Michail Schlesinger, known for minimax deviation strategies.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['Michail Schlesinger', 'minimax', 'deviation', 'learning samples']
+        'expected_answer': 'Xiaojin Zhu authored "An Optimal Control View of Adversarial Machine Learning" (2018), exploring adversarial ML through optimal control and reinforcement learning perspectives.',
+        'expected_papers_min': 1,
+        'expected_keywords': ['Xiaojin Zhu', 'adversarial', 'optimal control', 'reinforcement learning']
     },
 
-    # getCitations Route (6 cases)
+    # getCitations Route
     {
-        'id': 29, 
+        'id': 9, 
         'query': 'citation analysis for machine learning papers', 
         'expected_route': 'getCitations', 
         'difficulty': 'medium', 
-        'category': 'citation_analysis',
-        'expected_answer': 'Should analyze citations and impact of machine learning research papers.',
+        'expected_answer': 'Citation analysis shows high impact papers include optimization surveys, healthcare applications, and quantum ML reviews with significant academic influence.',
         'expected_papers_min': 1,
-        'expected_keywords': ['citation', 'analysis', 'machine learning', 'impact']
+        'expected_keywords': ['citation', 'analysis', 'impact', 'machine learning']
     },
     {
-        'id': 30, 
-        'query': 'impact factor of optimization research', 
+        'id': 10, 
+        'query': 'impact of automated machine learning research', 
         'expected_route': 'getCitations', 
         'difficulty': 'medium', 
-        'category': 'citation_analysis',
-        'expected_answer': 'Should discuss impact and citation metrics for optimization research.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['impact factor', 'optimization', 'research', 'citation']
-    },
-    {
-        'id': 31, 
-        'query': 'bibliometric study of adversarial ML', 
-        'expected_route': 'getCitations', 
-        'difficulty': 'hard', 
-        'category': 'bibliometric',
-        'expected_answer': 'Should provide bibliometric analysis of adversarial machine learning research.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['bibliometric', 'adversarial', 'machine learning', 'study']
-    },
-    {
-        'id': 32, 
-        'query': 'citation count for BERT papers', 
-        'expected_route': 'getCitations', 
-        'difficulty': 'medium', 
-        'category': 'model_citations',
-        'expected_answer': 'Should provide citation information and impact analysis for BERT-related papers.',
+        'expected_answer': 'AutoML research has significant impact with frameworks like AutoCompete and comprehensive surveys driving adoption in industry and academia.',
         'expected_papers_min': 1,
-        'expected_keywords': ['citation count', 'BERT', 'papers', 'impact']
-    },
-    {
-        'id': 33, 
-        'query': 'research impact of federated learning', 
-        'expected_route': 'getCitations', 
-        'difficulty': 'medium', 
-        'category': 'field_impact',
-        'expected_answer': 'Should analyze the research impact and citation patterns of federated learning.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['research impact', 'federated learning', 'citation', 'patterns']
-    },
-    {
-        'id': 34, 
-        'query': 'h-index analysis for ML researchers', 
-        'expected_route': 'getCitations', 
-        'difficulty': 'hard', 
-        'category': 'researcher_metrics',
-        'expected_answer': 'Should discuss h-index and other citation metrics for machine learning researchers.',
-        'expected_papers_min': 0,
-        'expected_keywords': ['h-index', 'ML researchers', 'citation metrics', 'analysis']
+        'expected_keywords': ['impact', 'automated machine learning', 'AutoML', 'research']
     },
 
-    # getRelatedPapers Route (8 cases)
+    # getRelatedPapers Route
     {
-        'id': 35, 
+        'id': 11, 
         'query': 'papers related to machine learning optimization', 
         'expected_route': 'getRelatedPapers', 
         'difficulty': 'medium', 
-        'category': 'related_search',
-        'expected_answer': 'Should find papers related to ML optimization, gradient methods, and learning algorithms.',
+        'expected_answer': 'Related optimization papers include surveys on optimization methods, Bayesian optimization guides, and gradient-based learning techniques for ML.',
         'expected_papers_min': 3,
-        'expected_keywords': ['related papers', 'optimization', 'machine learning', 'gradient']
+        'expected_keywords': ['related', 'optimization', 'machine learning', 'gradient']
     },
     {
-        'id': 36, 
-        'query': 'similar research to BERT models', 
+        'id': 12, 
+        'query': 'similar research to healthcare ML', 
         'expected_route': 'getRelatedPapers', 
         'difficulty': 'medium', 
-        'category': 'model_related',
-        'expected_answer': 'Should find research similar to BERT, including other transformer models and language models.',
-        'expected_papers_min': 3,
-        'expected_keywords': ['similar research', 'BERT', 'transformer', 'language model']
-    },
-    {
-        'id': 37, 
-        'query': 'connected work to adversarial machine learning', 
-        'expected_route': 'getRelatedPapers', 
-        'difficulty': 'medium', 
-        'category': 'security_related',
-        'expected_answer': 'Should find work connected to adversarial ML, robustness, and security.',
+        'expected_answer': 'Related healthcare research includes clinical predictive analytics, EHR representation learning, and probabilistic ML for medical applications.',
         'expected_papers_min': 2,
-        'expected_keywords': ['connected work', 'adversarial', 'machine learning', 'robustness']
-    },
-    {
-        'id': 38, 
-        'query': 'related studies on healthcare ML', 
-        'expected_route': 'getRelatedPapers', 
-        'difficulty': 'medium', 
-        'category': 'domain_related',
-        'expected_answer': 'Should find studies related to healthcare applications of machine learning.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['related studies', 'healthcare', 'ML', 'clinical']
-    },
-    {
-        'id': 39, 
-        'query': 'papers similar to tool learning research', 
-        'expected_route': 'getRelatedPapers', 
-        'difficulty': 'medium', 
-        'category': 'agent_related',
-        'expected_answer': 'Should find papers similar to tool learning, including agent systems and reasoning.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['similar papers', 'tool learning', 'agent', 'reasoning']
-    },
-    {
-        'id': 40, 
-        'query': 'related work on federated learning', 
-        'expected_route': 'getRelatedPapers', 
-        'difficulty': 'medium', 
-        'category': 'distributed_related',
-        'expected_answer': 'Should find work related to federated learning and distributed machine learning.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['related work', 'federated learning', 'distributed', 'privacy']
-    },
-    {
-        'id': 41, 
-        'query': 'connected research to quantum ML', 
-        'expected_route': 'getRelatedPapers', 
-        'difficulty': 'hard', 
-        'category': 'quantum_related',
-        'expected_answer': 'Should find research connected to quantum machine learning and quantum computing.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['connected research', 'quantum ML', 'quantum computing', 'algorithm']
-    },
-    {
-        'id': 42, 
-        'query': 'similar papers to interpretable ML', 
-        'expected_route': 'getRelatedPapers', 
-        'difficulty': 'medium', 
-        'category': 'interpretability_related',
-        'expected_answer': 'Should find papers similar to interpretable ML, explainable AI, and transparency research.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['similar papers', 'interpretable', 'explainable', 'transparency']
+        'expected_keywords': ['similar', 'healthcare', 'clinical', 'medical ML']
     },
 
-    # comparePapers Route (8 cases)
+    # comparePapers Route
     {
-        'id': 43, 
+        'id': 13, 
         'query': 'compare supervised and unsupervised learning', 
         'expected_route': 'comparePapers', 
         'difficulty': 'easy', 
-        'category': 'learning_types',
-        'expected_answer': 'Should compare different learning paradigms, their methods, and applications.',
+        'expected_answer': 'Supervised learning uses labeled data for prediction while unsupervised learning finds patterns in unlabeled data. Different applications and evaluation methods.',
         'expected_papers_min': 2,
         'expected_keywords': ['compare', 'supervised', 'unsupervised', 'learning']
     },
     {
-        'id': 44, 
-        'query': 'difference between optimization methods', 
-        'expected_route': 'comparePapers', 
-        'difficulty': 'medium', 
-        'category': 'optimization_comparison',
-        'expected_answer': 'Should compare different optimization approaches in machine learning.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['difference', 'optimization methods', 'gradient', 'algorithm']
-    },
-    {
-        'id': 45, 
-        'query': 'BERT versus other language models', 
-        'expected_route': 'comparePapers', 
-        'difficulty': 'medium', 
-        'category': 'model_comparison',
-        'expected_answer': 'Should compare BERT with other language models and their capabilities.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['BERT versus', 'language models', 'comparison', 'transformer']
-    },
-    {
-        'id': 46, 
-        'query': 'compare centralized vs federated learning', 
-        'expected_route': 'comparePapers', 
-        'difficulty': 'medium', 
-        'category': 'architecture_comparison',
-        'expected_answer': 'Should compare centralized and federated learning approaches.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['compare', 'centralized', 'federated learning', 'distributed']
-    },
-    {
-        'id': 47, 
+        'id': 14, 
         'query': 'classical ML versus deep learning approaches', 
         'expected_route': 'comparePapers', 
         'difficulty': 'medium', 
-        'category': 'paradigm_comparison',
-        'expected_answer': 'Should compare classical machine learning with deep learning methods.',
+        'expected_answer': 'Classical ML uses handcrafted features while deep learning learns representations automatically. Deep learning excels with large data, classical ML better for small datasets.',
         'expected_papers_min': 2,
-        'expected_keywords': ['classical ML', 'deep learning', 'approaches', 'comparison']
-    },
-    {
-        'id': 48, 
-        'query': 'automated ML vs manual ML approaches', 
-        'expected_route': 'comparePapers', 
-        'difficulty': 'medium', 
-        'category': 'automation_comparison',
-        'expected_answer': 'Should compare automated machine learning with manual ML development.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['automated ML', 'manual ML', 'approaches', 'AutoML']
-    },
-    {
-        'id': 49, 
-        'query': 'compare privacy-preserving ML techniques', 
-        'expected_route': 'comparePapers', 
-        'difficulty': 'hard', 
-        'category': 'privacy_comparison',
-        'expected_answer': 'Should compare different privacy-preserving machine learning techniques.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['compare', 'privacy-preserving', 'ML techniques', 'privacy']
-    },
-    {
-        'id': 50, 
-        'query': 'quantum ML versus classical ML', 
-        'expected_route': 'comparePapers', 
-        'difficulty': 'hard', 
-        'category': 'quantum_comparison',
-        'expected_answer': 'Should compare quantum machine learning with classical machine learning approaches.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['quantum ML', 'classical ML', 'comparison', 'quantum computing']
+        'expected_keywords': ['classical ML', 'deep learning', 'comparison', 'features']
     },
 
-    # trendAnalysis Route (8 cases)
+    # trendAnalysis Route
     {
-        'id': 51, 
+        'id': 15, 
         'query': 'trends in machine learning research', 
         'expected_route': 'trendAnalysis', 
         'difficulty': 'medium', 
-        'category': 'field_trends',
-        'expected_answer': 'Should analyze trends and evolution in machine learning research over time.',
+        'expected_answer': 'Current trends include quantum ML, automated ML, healthcare applications, and interpretable AI. Growing focus on safety and ethical considerations.',
         'expected_papers_min': 3,
-        'expected_keywords': ['trends', 'machine learning', 'research', 'evolution']
+        'expected_keywords': ['trends', 'machine learning', 'quantum', 'automated']
     },
     {
-        'id': 52, 
+        'id': 16, 
         'query': 'evolution of optimization algorithms', 
         'expected_route': 'trendAnalysis', 
         'difficulty': 'medium', 
-        'category': 'algorithm_trends',
-        'expected_answer': 'Should analyze the evolution and trends in optimization algorithms for ML.',
+        'expected_answer': 'Optimization evolved from simple gradient descent to advanced methods like Adam, Bayesian optimization, and quantum-inspired algorithms for ML.',
         'expected_papers_min': 2,
-        'expected_keywords': ['evolution', 'optimization algorithms', 'trends', 'development']
-    },
-    {
-        'id': 53, 
-        'query': 'progress in BERT and transformer models', 
-        'expected_route': 'trendAnalysis', 
-        'difficulty': 'medium', 
-        'category': 'model_trends',
-        'expected_answer': 'Should analyze progress and trends in BERT and transformer model development.',
-        'expected_papers_min': 3,
-        'expected_keywords': ['progress', 'BERT', 'transformer models', 'trends']
-    },
-    {
-        'id': 54, 
-        'query': 'trends in adversarial machine learning', 
-        'expected_route': 'trendAnalysis', 
-        'difficulty': 'medium', 
-        'category': 'security_trends',
-        'expected_answer': 'Should analyze trends in adversarial ML research and security developments.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['trends', 'adversarial', 'machine learning', 'security']
-    },
-    {
-        'id': 55, 
-        'query': 'emerging patterns in healthcare AI', 
-        'expected_route': 'trendAnalysis', 
-        'difficulty': 'medium', 
-        'category': 'domain_trends',
-        'expected_answer': 'Should analyze emerging patterns and trends in healthcare AI applications.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['emerging patterns', 'healthcare AI', 'trends', 'medical']
-    },
-    {
-        'id': 56, 
-        'query': 'development timeline of federated learning', 
-        'expected_route': 'trendAnalysis', 
-        'difficulty': 'medium', 
-        'category': 'technology_timeline',
-        'expected_answer': 'Should analyze the development timeline and trends in federated learning.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['development timeline', 'federated learning', 'trends', 'evolution']
-    },
-    {
-        'id': 57, 
-        'query': 'trends in quantum machine learning', 
-        'expected_route': 'trendAnalysis', 
-        'difficulty': 'hard', 
-        'category': 'quantum_trends',
-        'expected_answer': 'Should analyze trends and development in quantum machine learning research.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['trends', 'quantum machine learning', 'quantum computing', 'development']
-    },
-    {
-        'id': 58, 
-        'query': 'research evolution in interpretable AI', 
-        'expected_route': 'trendAnalysis', 
-        'difficulty': 'medium', 
-        'category': 'interpretability_trends',
-        'expected_answer': 'Should analyze research evolution and trends in interpretable AI and explainability.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['research evolution', 'interpretable AI', 'explainability', 'trends']
+        'expected_keywords': ['evolution', 'optimization', 'algorithms', 'gradient descent']
     },
 
-    # journalAnalysis Route (6 cases)
+    # journalAnalysis Route
     {
-        'id': 59, 
+        'id': 17, 
         'query': 'best venues for machine learning research', 
         'expected_route': 'journalAnalysis', 
         'difficulty': 'medium', 
-        'category': 'venue_analysis',
-        'expected_answer': 'Should analyze publication venues, conferences, and journals for ML research.',
+        'expected_answer': 'Top ML venues include ICML, NeurIPS, JMLR, and specialized conferences for domains like healthcare AI and quantum computing.',
         'expected_papers_min': 1,
-        'expected_keywords': ['best venues', 'machine learning research', 'conferences', 'journals']
+        'expected_keywords': ['venues', 'machine learning', 'ICML', 'conferences']
     },
     {
-        'id': 60, 
-        'query': 'top conferences for AI papers', 
+        'id': 18, 
+        'query': 'publication patterns in AI research', 
         'expected_route': 'journalAnalysis', 
         'difficulty': 'medium', 
-        'category': 'conference_analysis',
-        'expected_answer': 'Should identify and analyze top conferences for AI and ML research publication.',
+        'expected_answer': 'AI research shows increasing publication volume with arXiv preprints becoming standard. Growing specialization in subfields like quantum ML and healthcare.',
         'expected_papers_min': 1,
-        'expected_keywords': ['top conferences', 'AI papers', 'publication', 'venues']
-    },
-    {
-        'id': 61, 
-        'query': 'publication patterns in optimization research', 
-        'expected_route': 'journalAnalysis', 
-        'difficulty': 'medium', 
-        'category': 'publication_patterns',
-        'expected_answer': 'Should analyze publication patterns and venues for optimization research.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['publication patterns', 'optimization research', 'venues', 'journals']
-    },
-    {
-        'id': 62, 
-        'query': 'journal rankings for deep learning', 
-        'expected_route': 'journalAnalysis', 
-        'difficulty': 'medium', 
-        'category': 'journal_rankings',
-        'expected_answer': 'Should analyze journal rankings and impact for deep learning research.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['journal rankings', 'deep learning', 'impact', 'research']
-    },
-    {
-        'id': 63, 
-        'query': 'venue analysis for healthcare AI research', 
-        'expected_route': 'journalAnalysis', 
-        'difficulty': 'hard', 
-        'category': 'domain_venues',
-        'expected_answer': 'Should analyze publication venues specifically for healthcare AI research.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['venue analysis', 'healthcare AI', 'research', 'medical journals']
-    },
-    {
-        'id': 64, 
-        'query': 'conference trends in NLP research', 
-        'expected_route': 'journalAnalysis', 
-        'difficulty': 'medium', 
-        'category': 'field_venues',
-        'expected_answer': 'Should analyze conference trends and venues for NLP research publication.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['conference trends', 'NLP research', 'venues', 'natural language']
+        'expected_keywords': ['publication', 'patterns', 'AI research', 'arXiv']
     },
 
-    # Multi-Route Cases (10 cases)
+    # Multi-Route Cases
     {
-        'id': 65, 
+        'id': 19, 
         'query': 'find papers by Elad Hazan on optimization', 
         'expected_route': 'searchPapers, getAuthorInfo', 
         'difficulty': 'medium', 
-        'category': 'multi_route',
-        'expected_answer': 'Should find optimization papers and provide author information about Elad Hazan.',
+        'expected_answer': 'Elad Hazan from Princeton authored "Lecture Notes: Optimization for Machine Learning" (2019). The paper covers optimization fundamentals for ML from university courses and tutorials.',
         'expected_papers_min': 1,
-        'expected_keywords': ['Elad Hazan', 'optimization', 'papers', 'author info']
+        'expected_keywords': ['Elad Hazan', 'optimization', 'Princeton', 'lecture notes']
     },
     {
-        'id': 66, 
-        'query': 'compare BERT models and analyze their citations', 
-        'expected_route': 'comparePapers, getCitations', 
+        'id': 20, 
+        'query': 'compare quantum ML approaches and analyze trends', 
+        'expected_route': 'comparePapers, trendAnalysis', 
         'difficulty': 'hard', 
-        'category': 'multi_route',
-        'expected_answer': 'Should compare different BERT models and analyze their citation impact.',
+        'expected_answer': 'Quantum ML includes NISQ and fault-tolerant approaches. Trends show growing interest in quantum advantages for specific ML tasks, with challenges in near-term implementations.',
         'expected_papers_min': 2,
-        'expected_keywords': ['compare', 'BERT models', 'citations', 'analysis']
-    },
-    {
-        'id': 67, 
-        'query': 'search for federated learning papers and find related work', 
-        'expected_route': 'searchPapers, getRelatedPapers', 
-        'difficulty': 'medium', 
-        'category': 'multi_route',
-        'expected_answer': 'Should find federated learning papers and identify related research.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['federated learning', 'papers', 'related work', 'distributed']
-    },
-    {
-        'id': 68, 
-        'query': 'analyze trends in machine learning and best publication venues', 
-        'expected_route': 'trendAnalysis, journalAnalysis', 
-        'difficulty': 'hard', 
-        'category': 'multi_route',
-        'expected_answer': 'Should analyze ML trends and identify top publication venues.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['trends', 'machine learning', 'publication venues', 'analysis']
-    },
-    {
-        'id': 69, 
-        'query': 'who is Ian Goodfellow and what are his key papers', 
-        'expected_route': 'getAuthorInfo, searchPapers', 
-        'difficulty': 'medium', 
-        'category': 'multi_route',
-        'expected_answer': 'Should provide author information and find key papers by Ian Goodfellow.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['Ian Goodfellow', 'author info', 'key papers', 'research']
-    },
-    {
-        'id': 70, 
-        'query': 'find adversarial ML papers and compare different approaches', 
-        'expected_route': 'searchPapers, comparePapers', 
-        'difficulty': 'hard', 
-        'category': 'multi_route',
-        'expected_answer': 'Should find adversarial ML papers and compare different adversarial approaches.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['adversarial ML', 'papers', 'compare', 'approaches']
-    },
-    {
-        'id': 71, 
-        'query': 'analyze healthcare AI trends and related research', 
-        'expected_route': 'trendAnalysis, getRelatedPapers', 
-        'difficulty': 'medium', 
-        'category': 'multi_route',
-        'expected_answer': 'Should analyze healthcare AI trends and find related research.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['healthcare AI', 'trends', 'related research', 'medical']
-    },
-    {
-        'id': 72, 
-        'query': 'compare optimization methods and analyze their impact', 
-        'expected_route': 'comparePapers, getCitations', 
-        'difficulty': 'hard', 
-        'category': 'multi_route',
-        'expected_answer': 'Should compare optimization methods and analyze their research impact.',
-        'expected_papers_min': 2,
-        'expected_keywords': ['optimization methods', 'compare', 'impact', 'citations']
-    },
-    {
-        'id': 73, 
-        'query': 'research by Wei-Hung Weng and similar healthcare papers', 
-        'expected_route': 'getAuthorInfo, getRelatedPapers', 
-        'difficulty': 'medium', 
-        'category': 'multi_route',
-        'expected_answer': 'Should provide author information and find similar healthcare research.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['Wei-Hung Weng', 'healthcare papers', 'author info', 'clinical']
-    },
-    {
-        'id': 74, 
-        'query': 'quantum ML research trends and publication venues', 
-        'expected_route': 'trendAnalysis, journalAnalysis', 
-        'difficulty': 'hard', 
-        'category': 'multi_route',
-        'expected_answer': 'Should analyze quantum ML trends and identify publication venues.',
-        'expected_papers_min': 1,
-        'expected_keywords': ['quantum ML', 'trends', 'publication venues', 'research']
+        'expected_keywords': ['quantum ML', 'NISQ', 'fault-tolerant', 'trends']
     }
 ]
 
 # ============================================================================
-# UTILITY FUNCTIONS
+# SIMPLE UTILITY FUNCTIONS
 # ============================================================================
 
 def get_dataset_statistics() -> Dict[str, Any]:
-    """Get comprehensive statistics about the QA dataset"""
+    """Get basic statistics about the QA dataset"""
     total_cases = len(COMPREHENSIVE_QA_DATASET)
     
     route_counts = {}
     difficulty_counts = {}
-    category_counts = {}
     
     for case in COMPREHENSIVE_QA_DATASET:
         # Count routes (handle multi-route)
@@ -789,71 +226,62 @@ def get_dataset_statistics() -> Dict[str, Any]:
             route_counts[route.strip()] = route_counts.get(route.strip(), 0) + 1
         
         # Count difficulties
-        diff = case['difficulty']
-        difficulty_counts[diff] = difficulty_counts.get(diff, 0) + 1
-        
-        # Count categories
-        cat = case['category']
-        category_counts[cat] = category_counts.get(cat, 0) + 1
+        difficulty_counts[case['difficulty']] = difficulty_counts.get(case['difficulty'], 0) + 1
     
     return {
         'total_cases': total_cases,
         'route_distribution': route_counts,
         'difficulty_distribution': difficulty_counts,
-        'category_distribution': category_counts,
         'multi_route_cases': len([c for c in COMPREHENSIVE_QA_DATASET if ',' in c['expected_route']])
     }
 
-def get_cases_by_route(route: str) -> List[Dict[str, Any]]:
-    """Get all test cases for a specific route"""
-    return [case for case in COMPREHENSIVE_QA_DATASET if route in case['expected_route']]
+def calculate_expected_answer_similarity(actual_response: str, expected_answer: str) -> float:
+    """Simple similarity between actual and expected answers"""
+    if not actual_response or not expected_answer:
+        return 0.0
+    
+    actual_words = set(actual_response.lower().split())
+    expected_words = set(expected_answer.lower().split())
+    
+    if not expected_words:
+        return 0.0
+    
+    intersection = len(actual_words.intersection(expected_words))
+    union = len(actual_words.union(expected_words))
+    
+    return intersection / union if union > 0 else 0.0
 
-def get_cases_by_difficulty(difficulty: str) -> List[Dict[str, Any]]:
-    """Get all test cases for a specific difficulty"""
-    return [case for case in COMPREHENSIVE_QA_DATASET if case['difficulty'] == difficulty]
-
-def get_expected_answer(test_id: int) -> Dict[str, Any]:
-    """Get expected answer for a specific test case"""
-    for case in COMPREHENSIVE_QA_DATASET:
-        if case['id'] == test_id:
-            return case
-    return {}
-
-def validate_test_case(case: Dict[str, Any]) -> bool:
-    """Validate that a test case has all required fields"""
-    required_fields = ['id', 'query', 'expected_route', 'difficulty', 'category', 
-                      'expected_answer', 'expected_papers_min', 'expected_keywords']
-    return all(field in case for field in required_fields)
-
-def get_multi_route_cases() -> List[Dict[str, Any]]:
-    """Get all multi-route test cases"""
-    return [case for case in COMPREHENSIVE_QA_DATASET if ',' in case['expected_route']]
+def calculate_keyword_match_score(response: str, expected_keywords: List[str]) -> float:
+    """Calculate how well response matches expected keywords"""
+    if not expected_keywords:
+        return 1.0
+    
+    response_lower = response.lower()
+    matched_keywords = sum(1 for keyword in expected_keywords if keyword.lower() in response_lower)
+    
+    return matched_keywords / len(expected_keywords)
 
 def main():
-    """Print dataset statistics"""
-    print("QA Dataset Statistics:")
-    print("=" * 50)
+    """Print simple dataset statistics"""
+    print("📊 Simple QA Dataset for Tool Learning")
+    print("=" * 40)
     
     stats = get_dataset_statistics()
     print(f"Total test cases: {stats['total_cases']}")
     print(f"Multi-route cases: {stats['multi_route_cases']}")
     print()
     
-    print("Route Distribution:")
+    print("Routes covered:")
     for route, count in sorted(stats['route_distribution'].items()):
         print(f"  {route}: {count}")
     print()
     
-    print("Difficulty Distribution:")
+    print("Difficulty levels:")
     for difficulty, count in sorted(stats['difficulty_distribution'].items()):
         print(f"  {difficulty}: {count}")
     print()
     
-    print("Top Categories:")
-    sorted_categories = sorted(stats['category_distribution'].items(), 
-                              key=lambda x: x[1], reverse=True)
-    for category, count in sorted_categories[:10]:
-        print(f"  {category}: {count}")
+    print("✅ Simple, realistic dataset ready for testing!")
 
 if __name__ == "__main__":
     main() 

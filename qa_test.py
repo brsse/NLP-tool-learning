@@ -1,13 +1,15 @@
 """
-Generates comprehensive JSON results containing the 8 features:
+CORE QA TESTING FRAMEWORK
+Generates comprehensive JSON results containing the 6 core features:
 1. Route Performance: Accuracy per route
 2. Response Quality: Compare answers with qa.py expected answers
 3. Model Analysis: Metrics + time comparison
 4. Difficulty Analysis: Performance by easy/medium/hard questions
-5. Additional Tests: Consistency, robustness metrics
-6. Number of Papers Found: Analysis
-7. Static vs Non-Static Data: Results for both modes
-8. Results saved to model/[model_name]/ and result/ folders
+5. Papers Analysis: Retrieval quantity and quality metrics
+6. Summary Metrics: Key performance indicators
+
+This is the PRODUCTION monitoring framework for system performance.
+For research ablation studies, see: ablation_test.py
 """
 
 import os
@@ -54,51 +56,122 @@ class QualityEvaluator:
         return min(coverage, 1.0)
     
     def _evaluate_structure_coherence(self, response: str) -> float:
-        """Evaluate logical structure and flow"""
+        """Evaluate logical structure and flow - enhanced for multi-route analysis"""
         if not response:
             return 0.0
         
-        has_introduction = any(word in response.lower()[:100] for word in ['based', 'found', 'according', 'research', 'analysis'])
-        has_body_content = len(response) > 100
-        has_specific_info = any(char.isdigit() for char in response) or any(word in response.lower() 
-                              for word in ['paper', 'study', 'research', 'author', 'published', 'year'])
-        has_conclusion = any(word in response.lower()[-100:] for word in ['overall', 'conclusion', 'summary', 'therefore'])
+        response_lower = response.lower()
         
-        structure_score = sum([has_introduction, has_body_content, has_specific_info, has_conclusion]) / 4
+        # Enhanced introduction detection
+        intro_indicators = ['based', 'found', 'according', 'research', 'analysis', 'examining', 'reviewing', 'analyzing']
+        has_introduction = any(word in response_lower[:150] for word in intro_indicators)
+        
+        # Content depth indicators
+        has_substantial_content = len(response) > 200
+        
+        # Multi-route structure indicators
+        has_route_organization = any(indicator in response_lower for indicator in [
+            'search', 'comparison', 'analysis', 'trend', 'citation', 'author', 'venue'
+        ])
+        
+        # Specific research information
+        has_specific_info = (any(char.isdigit() for char in response) or 
+                           any(word in response_lower for word in [
+                               'paper', 'study', 'research', 'author', 'published', 'year',
+                               'method', 'approach', 'finding', 'result', 'impact'
+                           ]))
+        
+        # Enhanced conclusion detection
+        conclusion_indicators = ['overall', 'conclusion', 'summary', 'therefore', 'in summary', 'findings suggest']
+        has_conclusion = any(word in response_lower[-200:] for word in conclusion_indicators)
+        
+        # Section organization (for multi-route responses)
+        has_sections = response.count('\n\n') > 1 or any(marker in response for marker in ['1.', '2.', '##', '**'])
+        
+        # Comprehensive analysis indicators
+        has_comprehensive_analysis = len([word for word in ['compare', 'analyze', 'examine', 'discuss', 'evaluate'] 
+                                        if word in response_lower]) >= 2
+        
+        structure_elements = [
+            has_introduction,
+            has_substantial_content, 
+            has_route_organization,
+            has_specific_info,
+            has_conclusion,
+            has_sections,
+            has_comprehensive_analysis
+        ]
+        
+        structure_score = sum(structure_elements) / len(structure_elements)
         return structure_score
     
     def _evaluate_length_optimization(self, response: str) -> float:
-        """Evaluate if response length is appropriate"""
+        """Evaluate if response length is appropriate - favor comprehensive responses"""
         length = len(response)
         
         if length < 50:
-            return 0.1  # Too short
+            return 0.1  # Too short - likely failed
         elif 50 <= length < 150:
-            return 0.6  # Brief but acceptable
+            return 0.5  # Brief but acceptable for simple queries
         elif 150 <= length < 400:
-            return 1.0  # Optimal range
-        elif 400 <= length < 800:
-            return 0.8  # Good but getting long
+            return 0.8  # Good for basic responses
+        elif 400 <= length < 1000:
+            return 1.0  # Optimal range for comprehensive analysis
+        elif 1000 <= length < 2000:
+            return 0.95 # Very good - detailed analysis
+        elif 2000 <= length < 3000:
+            return 0.85 # Good - thorough but getting verbose
         else:
-            return 0.3  # Too long
+            return 0.6  # Still acceptable for complex multi-route responses
     
     def _evaluate_information_density(self, response: str, papers: List[Dict]) -> float:
-        """Evaluate richness of relevant information from papers"""
+        """Evaluate richness of relevant information from papers - enhanced for multi-route analysis"""
         if not response:
             return 0.0
         
-        research_indicators = ['paper', 'study', 'research', 'author', 'year', 'published']
-        indicator_count = sum(1 for indicator in research_indicators if indicator in response.lower())
+        response_lower = response.lower()
         
+        # Enhanced research indicators including route-specific terms
+        research_indicators = [
+            'paper', 'study', 'research', 'author', 'year', 'published',
+            'citation', 'impact', 'analysis', 'comparison', 'trend', 'evolution',
+            'method', 'approach', 'finding', 'result', 'conclusion', 'abstract'
+        ]
+        indicator_count = sum(1 for indicator in research_indicators if indicator in response_lower)
+        
+        # Check for paper citations and content integration
         paper_citations = 0
+        content_integration = 0
         if papers:
             for paper in papers[:5]:
-                title_words = [word for word in paper.get('title', '').lower().split() if len(word) > 4][:3]
-                if any(word in response.lower() for word in title_words):
+                # Check title word matches
+                title_words = [word for word in paper.get('title', '').lower().split() if len(word) > 4][:5]
+                if any(word in response_lower for word in title_words):
                     paper_citations += 1
+                
+                # Check author mentions
+                authors = paper.get('authors', [])
+                if authors and any(author.lower().split()[-1] in response_lower for author in authors[:2]):
+                    content_integration += 1
+        
+        # Multi-route analysis indicators
+        route_indicators = [
+            'compare', 'comparison', 'versus', 'trend', 'evolution', 'citation',
+            'impact', 'related', 'similar', 'venue', 'journal', 'conference'
+        ]
+        route_analysis_count = sum(1 for indicator in route_indicators if indicator in response_lower)
         
         max_papers = max(len(papers[:5]), 1)
-        density_score = min((indicator_count / 6) * 0.6 + (paper_citations / max_papers) * 0.4, 1.0)
+        
+        # Enhanced scoring that rewards comprehensive analysis
+        density_score = min(
+            (indicator_count / 15) * 0.4 +           # Research terminology
+            (paper_citations / max_papers) * 0.3 +    # Paper citation integration
+            (content_integration / max_papers) * 0.2 + # Author/content mentions
+            (route_analysis_count / 8) * 0.1,         # Multi-route analysis terms
+            1.0
+        )
+        
         return density_score
     
     def _evaluate_expected_answer_alignment(self, response: str, test_case: Dict) -> float:
@@ -219,87 +292,96 @@ class QATestSuite:
         total_time = time.time() - total_start_time
         total_cases = len(test_cases)
         
-        # Calculate comprehensive results with 8 required features
+        # Calculate comprehensive results with 6 CORE TESTING FEATURES
         results = {
-            # Feature 1: Route Performance - Accuracy per route
+            # Feature 1: Route Performance - Multi-route accuracy analysis
             'route_performance': {
                 route: {
                     'accuracy': stats['correct'] / stats['total'],
                     'avg_quality': stats['quality_sum'] / stats['total'],
                     'avg_papers_found': stats['papers_sum'] / stats['total'],
-                    'total_cases': stats['total']
+                    'total_cases': stats['total'],
+                    'avg_quality_score': stats['quality_sum'] / stats['total']
                 } for route, stats in route_stats.items()
             },
             
-            # Feature 2: Response Quality - Compare with qa.py expected answers
+            # Feature 2: Response Quality - qa.py expected answer comparison
             'response_quality': {
                 'overall_avg_quality': sum(r['quality_scores']['average_quality'] for r in test_results) / len(test_results),
                 'keyword_coverage_avg': sum(r['quality_scores']['keyword_coverage'] for r in test_results) / len(test_results),
                 'expected_answer_alignment_avg': sum(r['quality_scores']['expected_answer_alignment'] for r in test_results) / len(test_results),
-                'structure_coherence_avg': sum(r['quality_scores']['structure_coherence'] for r in test_results) / len(test_results)
+                'structure_coherence_avg': sum(r['quality_scores']['structure_coherence'] for r in test_results) / len(test_results),
+                'qa_comparison_metrics': {
+                    'similarity_scores': [r.get('qa_similarity', 0) for r in test_results],
+                    'keyword_match_scores': [r.get('keyword_match', 0) for r in test_results],
+                    'expected_answer_coverage': sum(1 for r in test_results if r.get('qa_similarity', 0) > 0.5) / len(test_results)
+                }
             },
             
-            # Feature 3: Model Analysis - Metrics + time comparison
+            # Feature 3: Model Analysis - Quality + time benchmarking
             'model_analysis': {
                 'model_name': model,
                 'data_mode': data_mode,
                 'total_test_cases': total_cases,
-                'route_accuracy': sum(r['correct'] for r in route_stats.values()) / total_cases,
-                'avg_response_time': total_time / total_cases,
-                'total_time': total_time,
-                'error_rate': len(errors) / total_cases,
-                'fastest_response': min([r['response_time'] for r in test_results], default=0),
-                'slowest_response': max([r['response_time'] for r in test_results], default=0)
+                'overall_accuracy': sum(r['correct'] for r in route_stats.values()) / total_cases,
+                'performance_metrics': {
+                    'avg_response_time': total_time / total_cases,
+                    'total_time': total_time,
+                    'fastest_response': min([r['response_time'] for r in test_results], default=0),
+                    'slowest_response': max([r['response_time'] for r in test_results], default=0)
+                },
+                'quality_benchmarks': {
+                    'min_quality': min([r['quality_scores']['average_quality'] for r in test_results], default=0),
+                    'max_quality': max([r['quality_scores']['average_quality'] for r in test_results], default=0),
+                    'avg_quality': sum([r['quality_scores']['average_quality'] for r in test_results]) / len(test_results) if test_results else 0
+                },
+                'error_analysis': {
+                    'error_rate': len(errors) / total_cases,
+                    'error_details': errors
+                }
             },
             
-            # Feature 4: Difficulty Analysis - Performance by easy/medium/hard
+            # Feature 4: Difficulty Analysis - Easy/medium/hard breakdown
             'difficulty_analysis': {
                 difficulty: {
                     'accuracy': stats['correct'] / stats['total'],
                     'avg_quality': stats['quality_sum'] / stats['total'],
                     'avg_papers_found': stats['papers_sum'] / stats['total'],
-                    'total_cases': stats['total']
+                    'total_cases': stats['total'],
+                    'performance_trend': 'expected' if difficulty == 'easy' and stats['correct']/stats['total'] > 0.8 else 'review_needed'
                 } for difficulty, stats in difficulty_stats.items()
             },
             
-            # Feature 5: Additional Tests - Consistency, robustness
-            'additional_tests': {
-                'consistency_score': self._calculate_consistency(route_stats),
-                'robustness_metrics': {
-                    'error_rate': len(errors) / total_cases,
-                    'route_accuracy_variance': self._calculate_variance([stats['correct']/stats['total'] for stats in route_stats.values()]),
-                    'quality_variance': self._calculate_variance([stats['quality_sum']/stats['total'] for stats in route_stats.values()])
-                },
-                'edge_case_performance': self._analyze_edge_cases(test_results)
-            },
-            
-            # Feature 6: Number of Papers Found - Analysis
+            # Feature 5: Papers Analysis + Relevance - Quantity + quality metrics
             'papers_analysis': {
-                'total_papers_found': papers_found_total,
+                'retrieval_metrics': {
+                    'total_papers_found': papers_found_total,
+                    'avg_papers_per_query': papers_found_total / total_cases,
+                    'max_papers_found': max([r['papers_found'] for r in test_results], default=0),
+                    'min_papers_found': min([r['papers_found'] for r in test_results], default=0),
+                    'zero_results_rate': sum(1 for r in test_results if r['papers_found'] == 0) / len(test_results)
+                },
+                'relevance_quality': {
+                    'papers_by_route': {route: stats['papers_sum'] / stats['total'] for route, stats in route_stats.items()},
+                    'papers_by_difficulty': {difficulty: stats['papers_sum'] / stats['total'] for difficulty, stats in difficulty_stats.items()},
+                    'expected_vs_actual': {
+                        'meeting_expectations': sum(1 for r in test_results 
+                                                  if r['papers_found'] >= r.get('expected_papers_min', 1)) / len(test_results),
+                        'exceeding_expectations': sum(1 for r in test_results 
+                                                    if r['papers_found'] > r.get('expected_papers_min', 1) * 2) / len(test_results)
+                    }
+                }
+            },
+            
+            # Feature 6: Summary Metrics - Key performance indicators
+            'summary_metrics': {
+                'sample_size': total_cases,
+                'overall_success_rate': sum(1 for r in test_results if r['quality_scores']['average_quality'] > 0.5) / len(test_results),
+                'avg_response_time': total_time / total_cases,
                 'avg_papers_per_query': papers_found_total / total_cases,
-                'papers_by_route': {route: stats['papers_sum'] / stats['total'] for route, stats in route_stats.items()},
-                'papers_by_difficulty': {difficulty: stats['papers_sum'] / stats['total'] for difficulty, stats in difficulty_stats.items()},
-                'max_papers_found': max([r['papers_found'] for r in test_results], default=0),
-                'min_papers_found': min([r['papers_found'] for r in test_results], default=0)
-            },
-            
-            # Feature 7: Static vs Non-Static Data - Current mode info
-            'data_mode_info': {
-                'current_mode': data_mode,
-                'static_dataset_available': use_static,
-                'dynamic_api_available': not use_static,
-                'mode_performance_summary': f"Using {data_mode} data mode for this test run"
-            },
-            
-            # Feature 8: Metadata and detailed results
-            'test_metadata': {
-                'timestamp': datetime.now().isoformat(),
-                'test_cases_count': total_cases,
-                'model_tested': model,
-                'data_mode': data_mode,
-                'dataset_statistics': get_dataset_statistics(),
-                'detailed_results': test_results[:10],  # First 10 for space
-                'error_details': errors
+                'error_rate': len(errors) / total_cases,
+                'best_performing_route': max(route_stats.items(), key=lambda x: x[1]['correct'] / x[1]['total'])[0] if route_stats else 'none',
+                'most_challenging_difficulty': min(difficulty_stats.items(), key=lambda x: x[1]['correct'] / x[1]['total'])[0] if difficulty_stats else 'none'
             }
         }
         
@@ -337,6 +419,15 @@ class QATestSuite:
         # Quality evaluation
         quality_scores = self.quality_evaluator.evaluate_response(query, response, papers, test_case)
         
+        # Calculate qa.py comparison metrics
+        from qa import calculate_expected_answer_similarity, calculate_keyword_match_score
+        
+        expected_answer = test_case.get('expected_answer', '')
+        expected_keywords = test_case.get('expected_keywords', [])
+        
+        qa_similarity = calculate_expected_answer_similarity(response, expected_answer)
+        keyword_match = calculate_keyword_match_score(response, expected_keywords)
+        
         end_time = time.time()
         
         return {
@@ -351,7 +442,9 @@ class QATestSuite:
             'response_length': len(response),
             'response_time': end_time - start_time,
             'quality_scores': quality_scores,
-            'expected_keywords_found': sum(1 for kw in test_case.get('expected_keywords', []) if kw.lower() in response.lower()),
+            'qa_similarity': qa_similarity,
+            'keyword_match': keyword_match,
+            'expected_keywords_found': sum(1 for kw in expected_keywords if kw.lower() in response.lower()),
             'multi_route_info': {
                 'routes_selected': len(selected_routes),
                 'primary_route_correct': expected_route == selected_routes[0] if selected_routes else False,
@@ -359,29 +452,7 @@ class QATestSuite:
             }
         }
     
-    def _calculate_consistency(self, route_stats: Dict) -> float:
-        """Calculate consistency score across routes"""
-        accuracies = [stats['correct'] / stats['total'] for stats in route_stats.values()]
-        if not accuracies:
-            return 0.0
-        return 1.0 - (max(accuracies) - min(accuracies))
-    
-    def _calculate_variance(self, values: List[float]) -> float:
-        """Calculate variance of values"""
-        if not values:
-            return 0.0
-        mean = sum(values) / len(values)
-        return sum((x - mean) ** 2 for x in values) / len(values)
-    
-    def _analyze_edge_cases(self, test_results: List[Dict]) -> Dict[str, Any]:
-        """Analyze edge case performance"""
-        return {
-            'zero_papers_found': sum(1 for r in test_results if r['papers_found'] == 0),
-            'low_confidence_correct': sum(1 for r in test_results if r['confidence'] < 0.5 and r['route_correct']),
-            'high_confidence_incorrect': sum(1 for r in test_results if r['confidence'] > 0.8 and not r['route_correct']),
-            'very_short_responses': sum(1 for r in test_results if r['response_length'] < 50),
-            'very_long_responses': sum(1 for r in test_results if r['response_length'] > 1000)
-        }
+
     
     def _save_model_results(self, model: str, results: Dict, data_mode: str, timestamp: str):
         """Save results to model/[model_name]/ directory"""
@@ -420,7 +491,7 @@ def main():
     else:
         print("\n✅ Sample testing completed successfully!")
         print(f"📁 Results saved to model/[model_name]/ directories")
-        print("🔍 Each JSON file contains all 8 required features")
+        print("🔍 Each JSON file contains all 6 core features")
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

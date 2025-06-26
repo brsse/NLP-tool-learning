@@ -97,23 +97,26 @@ class ToolLearningSystem:
                 result = response.json()
                 selected_text = result['response'].strip()
                 
-                # Parse multiple routes
+                # Parse multiple routes and remove duplicates
                 routes = [route.strip() for route in selected_text.split(',')]
                 valid_routes = []
+                seen_routes = set()  # Track already added routes
                 
                 for route in routes:
-                    if route in self.routes:
+                    if route in self.routes and route not in seen_routes:
                         valid_routes.append(route)
-                    else:
+                        seen_routes.add(route)
+                    elif route not in seen_routes:
                         # Try to extract valid route
                         for valid_route in self.routes:
-                            if valid_route.lower() in route.lower():
+                            if valid_route.lower() in route.lower() and valid_route not in seen_routes:
                                 valid_routes.append(valid_route)
+                                seen_routes.add(valid_route)
                                 break
                 
                 if valid_routes:
-                    confidence = 0.95 if len(valid_routes) == len(routes) else 0.85
-                    return valid_routes, confidence, f"LLM selected {', '.join(valid_routes)}"
+                    confidence = 0.95 if len(valid_routes) == len(set(routes)) else 0.85
+                    return valid_routes, confidence, f"LLM selected {', '.join(valid_routes)} (deduplicated)"
                             
         except Exception as e:
             logger.warning(f"LLM route selection failed: {e}")
@@ -143,7 +146,7 @@ class ToolLearningSystem:
                 scores[route] = score / len(keywords)
         
         if scores:
-            # Select routes with high scores (above threshold or top 2)
+            # Select routes with high scores (above threshold or top 2) - no duplicates possible here since scores dict has unique keys
             sorted_routes = sorted(scores.items(), key=lambda x: x[1], reverse=True)
             selected_routes = []
             
@@ -156,7 +159,7 @@ class ToolLearningSystem:
             
             if selected_routes:
                 avg_confidence = sum(scores[route] for route in selected_routes) / len(selected_routes)
-                return selected_routes, avg_confidence, f"Keyword-based selection: {', '.join(selected_routes)}"
+                return selected_routes, avg_confidence, f"Keyword-based selection: {', '.join(selected_routes)} (unique routes)"
         
         return ['searchPapers'], 0.5, "Default route: searchPapers"
     
