@@ -7,7 +7,7 @@ Realistic expected answers based on actual arxiv dataset content.
 from typing import Dict, List, Any
 
 # ============================================================================
-# SIMPLE QA DATASET WITH REALISTIC ANSWERS
+# SIMPLE QA DATASET 
 # ============================================================================
 
 COMPREHENSIVE_QA_DATASET = [
