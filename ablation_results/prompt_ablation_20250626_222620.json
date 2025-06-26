@@ -1,0 +1,16 @@
+{
+  "test_name": "Prompt Engineering Ablation",
+  "timestamp": "2025-06-26T22:20:08.627263",
+  "models_tested": [
+    "llama3.2",
+    "deepseek-r1",
+    "mistral:7b-instruct"
+  ],
+  "sample_size": 10,
+  "prompt_variants": [
+    "baseline",
+    "single",
+    "fewshot"
+  ],
+  "prompt_results": {
+    

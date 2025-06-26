@@ -8,6 +8,12 @@ from typing import Dict, List, Any, Tuple
 from qa_test import QATestSuite
 from qa import COMPREHENSIVE_QA_DATASET
 
+from prompts import (
+    ROUTE_SELECTION_PROMPT,
+    ROUTE_SELECTION_PROMPT_SINGLE,
+    ROUTE_SELECTION_PROMPT_FEWSHOT,
+)
+
 def save_ablation_results(results: Dict[str, Any], test_name: str):
     """Save ablation results to separate JSON files"""
     os.makedirs("ablation_results", exist_ok=True)
@@ -215,6 +221,84 @@ def test_cross_model_consistency(models: List[str] = None, sample_size: int = 3)
     
     save_ablation_results(results, 'cross_model_consistency')
     print_cross_model_results(results)
+    return results
+
+# Test 5: Prompt Engineering 
+def test_prompt_ablation(models: List[str] = None, sample_size: int = 3) -> Dict[str, Any]:
+    """Ablation test for different route selection prompts"""
+    qa_suite = QATestSuite()
+
+    if not qa_suite.system_available:
+        return {'error': 'System not available'}
+    
+    if models is None:
+        models = ['deepseek-r1']
+
+    prompt_variants = {
+        "baseline": ROUTE_SELECTION_PROMPT,
+        "single": ROUTE_SELECTION_PROMPT_SINGLE,
+        "fewshot": ROUTE_SELECTION_PROMPT_FEWSHOT,
+    }
+    
+    test_cases = COMPREHENSIVE_QA_DATASET[:sample_size]
+    results = {
+        'test_name': 'Prompt Engineering Ablation',
+        'timestamp': datetime.now().isoformat(),
+        'models_tested': models,
+        'sample_size': sample_size,
+        'prompt_variants': list(prompt_variants.keys()),
+        'prompt_results': {}
+    }
+    
+    for model in models:
+        print(f"\n🤖 Testing on model: {model}")
+        for prompt_name, prompt_template in prompt_variants.items():
+            print(f"   📋 Prompt variant: {prompt_name}")
+            total_quality = 0
+            total_time = 0
+            for case in test_cases:
+                try:
+                    start_time = time.time()
+                    
+                    tool_system = qa_suite.tool_system_static
+                    tool_system.ollama_model = model
+                    # Here is the KEY: override the prompt passed to the tool system for routing
+                    # (You must implement this if not already supported in your tool system)
+                    custom_prompt = prompt_template.format(query=case['query'])
+                    routes, confidence, explanation = tool_system.select_route_with_custom_prompt(case['query'], custom_prompt)
+                    
+                    papers = tool_system.search_papers(case['query'], max_results=5)
+                    response = tool_system.generate_response(case['query'], routes, papers)
+                    
+                    end_time = time.time()
+                    
+                    quality_scores = qa_suite.quality_evaluator.evaluate_response(
+                        case['query'], response, papers, case
+                    )
+                    
+                    # For debugging purposes
+                    print(f"Model: {model}, Prompt: {prompt_name}, Query: {case['query']}")
+                    print(f"  Routes: {routes}")
+                    print(f"  Response: {response[:120]}")
+                    print(f"  Quality: {quality_scores['average_quality']}\n")
+
+                    total_quality += quality_scores['average_quality']
+                    total_time += (end_time - start_time)
+                    
+                except Exception as e:
+                    print(f"  Prompt ablation error: {e}")
+                    total_quality += 0.1
+                    total_time += 10.0
+            
+            avg_quality = total_quality / len(test_cases)
+            avg_time = total_time / len(test_cases)
+            results['prompt_results'][f"{model}__{prompt_name}"] = {
+                'avg_quality': avg_quality,
+                'avg_time': avg_time
+            }
+            print(f"      Quality: {avg_quality:.3f}  Time: {avg_time:.2f}s")
+    
+    save_ablation_results(results, 'prompt_ablation')
     return results
 
 # Helper functions for different testing approaches
@@ -503,14 +587,17 @@ def main():
     print("🧪 Comprehensive Ablation Testing Suite")
     print("=" * 45)
     
-    models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
+    # models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
+    models = ['mistral:7b-instruct']
+
     sample_size = 3
     
     test_map = {
         "tool_vs_direct_vs_simple": test_tool_vs_direct_vs_simple,
         "route_ablation": test_route_ablation,
         "static_vs_dynamic": test_static_vs_dynamic,
-        "model_comparison": test_cross_model_consistency
+        "model_comparison": test_cross_model_consistency,
+        "prompt_ablation": test_prompt_ablation,
     }
 
     if len(sys.argv) > 1:

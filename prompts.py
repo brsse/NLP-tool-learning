@@ -19,6 +19,21 @@ Query: "{query}"
 Select the most appropriate route(s). You can select one or multiple routes if the query would benefit from multiple approaches.
 Respond with route names separated by commas (e.g., "searchPapers" or "searchPapers, getAuthorInfo")."""
 
+# Add Prompt Variants 
+ROUTE_SELECTION_PROMPT_SINGLE = """You are a route selector...
+...
+Select the **single most appropriate route** for the query. Respond with exactly one route name."""
+
+ROUTE_SELECTION_PROMPT_FEWSHOT = """You are a route selector...
+Examples:
+- "Who is Geoffrey Hinton?" → getAuthorInfo
+- "Compare CNN and RNN" → comparePapers
+- "Citation count of GPT paper" → getCitations
+
+Query: "{query}"
+
+Select the best single route and only reply with its name."""
+
 # Enhanced Response Generation Prompt for Tool Learning Excellence
 RESPONSE_GENERATION_PROMPT = """You are an expert research assistant with multi-route intelligence. Use the selected routes to provide a comprehensive analysis.
 

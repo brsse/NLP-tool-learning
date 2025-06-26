@@ -1,0 +1,27 @@
+{
+  "test_name": "Prompt Engineering Ablation",
+  "timestamp": "2025-06-26T23:03:31.118110",
+  "models_tested": [
+    "mistral:7b-instruct"
+  ],
+  "sample_size": 3,
+  "prompt_variants": [
+    "baseline",
+    "single",
+    "fewshot"
+  ],
+  "prompt_results": {
+    "mistral:7b-instruct__baseline": {
+      "avg_quality": 0.6726031746031746,
+      "avg_time": 24.205501794815063
+    },
+    "mistral:7b-instruct__single": {
+      "avg_quality": 0.6748492063492065,
+      "avg_time": 22.49020330111186
+    },
+    "mistral:7b-instruct__fewshot": {
+      "avg_quality": 0.7005793650793651,
+      "avg_time": 19.04129417737325
+    }
+  }
+}

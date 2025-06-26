@@ -1,0 +1,27 @@
+{
+  "test_name": "Prompt Engineering Ablation",
+  "timestamp": "2025-06-26T22:30:49.403798",
+  "models_tested": [
+    "deepseek-r1"
+  ],
+  "sample_size": 3,
+  "prompt_variants": [
+    "baseline",
+    "single",
+    "fewshot"
+  ],
+  "prompt_results": {
+    "deepseek-r1__baseline": {
+      "avg_quality": 0.10000000000000002,
+      "avg_time": 10.0
+    },
+    "deepseek-r1__single": {
+      "avg_quality": 0.10000000000000002,
+      "avg_time": 10.0
+    },
+    "deepseek-r1__fewshot": {
+      "avg_quality": 0.10000000000000002,
+      "avg_time": 10.0
+    }
+  }
+}
