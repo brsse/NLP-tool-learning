@@ -26,6 +26,15 @@ class ModelManager:
                 'temperature': 0.0,
                 'max_tokens': 1500,
                 'context_window': 8192
+            },
+            'mistral': {
+                'name': 'Mistral 7B Instruct',
+                'description': 'Instruction-tuned Mistral model for general tasks',
+                'size': '7B parameters',
+                'strengths': ['Instruction following', 'Academic language', 'Reasoning'],
+                'temperature': 0.1,
+                'max_tokens': 1200,
+                'context_window': 8192
             }
         }
         
