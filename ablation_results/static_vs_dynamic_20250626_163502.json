@@ -1,0 +1,35 @@
+{
+  "test_name": "Static vs Dynamic Data",
+  "timestamp": "2025-06-26T16:25:43.444955",
+  "models_tested": [
+    "llama3.2",
+    "deepseek-r1"
+  ],
+  "sample_size": 3,
+  "comparison_results": {
+    "llama3.2": {
+      "static_data": {
+        "avg_quality": 0.7131507936507937,
+        "avg_time": 80.98356103897095
+      },
+      "dynamic_data": {
+        "avg_quality": 0.7156587301587302,
+        "avg_time": 105.03104917208354
+      },
+      "quality_improvement": 0.002507936507936459,
+      "winner": "dynamic"
+    },
+    "deepseek-r1": {
+      "static_data": {
+        "avg_quality": 0.7375238095238096,
+        "avg_time": 0.18467267354329428
+      },
+      "dynamic_data": {
+        "avg_quality": 0.7621349206349207,
+        "avg_time": 0.2485497792561849
+      },
+      "quality_improvement": 0.02461111111111114,
+      "winner": "dynamic"
+    }
+  }
+}
