@@ -1,0 +1,44 @@
+{
+  "test_name": "Cross-Model Consistency",
+  "timestamp": "2025-06-26T18:12:00.615505",
+  "models_tested": [
+    "llama3.2",
+    "deepseek-r1",
+    "mistral:7b-instruct"
+  ],
+  "sample_size": 3,
+  "model_results": {
+    "llama3.2": {
+      "avg_quality": 0.6686349206349207,
+      "avg_time": 71.30256422360738,
+      "responses": [
+        "**Comprehensive Analysis of Machine Learning Optimization Papers**\n\nThis analysis combines the results from three selected routes: searchPapers, getCitations, and getRelatedPapers to provide a compreh",
+        "**Comprehensive Analysis of Adversarial Machine Learning Papers**\n\nThis analysis utilizes multi-route intelligence to identify relevant papers on adversarial machine learning, providing a comprehensiv",
+        "**Comprehensive Analysis of Healthcare Machine Learning Applications**\n\nThis analysis utilizes multi-route intelligence to provide a comprehensive understanding of healthcare machine learning applicat"
+      ]
+    },
+    "deepseek-r1": {
+      "avg_quality": 0.7685238095238095,
+      "avg_time": 355.54939063390094,
+      "responses": [
+        "Based on your query 'find papers about machine learning optimization' using routes [searchPapers], I found 5 relevant papers:\n\n\n1. **BERT-JAM: Boosting BERT-Enhanced Neural Machine Translation with Jo",
+        "<think>\nOkay, let's start by understanding the user's query. They want to search for adversarial machine learning papers using specific routes: searchPapers, getAuthorInfo, getCitations, comparePapers",
+        "Based on your query 'healthcare machine learning applications' using routes [searchPapers], I found 5 relevant papers:\n\n\n1. **BERT-JAM: Boosting BERT-Enhanced Neural Machine Translation with Joint Att"
+      ]
+    },
+    "mistral:7b-instruct": {
+      "avg_quality": 0.641047619047619,
+      "avg_time": 144.98612316449484,
+      "responses": [
+        "In this analysis, we will examine five papers related to machine learning optimization, specifically those involving BERT (Bidirectional Encoder Representations from Transformers), found using the sea",
+        "In response to your query regarding adversarial machine learning papers, I have identified and summarized key findings from five relevant papers found through the searchPapers and getRelatedPapers rou",
+        "In this analysis, we will be focusing on the selected routes of searchPapers and getRelatedWorks to provide a comprehensive understanding of healthcare machine learning applications using BERT (Bidire"
+      ]
+    }
+  },
+  "consistency_metrics": {
+    "overall_consistency": 0.12674976952658376,
+    "most_consistent_model": "deepseek-r1",
+    "quality_variance": 0.002998780941183058
+  }
+}

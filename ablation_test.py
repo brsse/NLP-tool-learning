@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import time
 from datetime import datetime
@@ -41,7 +42,7 @@ def test_tool_vs_direct_vs_simple(models: List[str] = None, sample_size: int = 3
         return {'error': 'System not available'}
     
     if models is None:
-        models = ['llama3.2', 'deepseek-r1']
+        models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
     
     test_cases = COMPREHENSIVE_QA_DATASET[:sample_size]
     results = {
@@ -91,7 +92,7 @@ def test_route_ablation(models: List[str] = None, sample_size: int = 3) -> Dict[
         return {'error': 'System not available'}
     
     if models is None:
-        models = ['llama3.2', 'deepseek-r1']
+        models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
     
     test_cases = COMPREHENSIVE_QA_DATASET[:sample_size]
     results = {
@@ -133,7 +134,7 @@ def test_static_vs_dynamic(models: List[str] = None, sample_size: int = 3) -> Di
         return {'error': 'System not available'}
     
     if models is None:
-        models = ['llama3.2', 'deepseek-r1']
+        models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
     
     test_cases = COMPREHENSIVE_QA_DATASET[:sample_size]
     results = {
@@ -175,7 +176,7 @@ def test_cross_model_consistency(models: List[str] = None, sample_size: int = 3)
         return {'error': 'System not available'}
     
     if models is None:
-        models = ['llama3.2', 'deepseek-r1']
+        models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
     
     test_cases = COMPREHENSIVE_QA_DATASET[:sample_size]
     results = {
@@ -502,26 +503,46 @@ def main():
     print("🧪 Comprehensive Ablation Testing Suite")
     print("=" * 45)
     
-    models = ['llama3.2', 'deepseek-r1']
+    models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
     sample_size = 3
     
-    tests = [
-        ("Tool vs Direct vs Simple", test_tool_vs_direct_vs_simple),
-        ("Route Ablation", test_route_ablation),
-        ("Static vs Dynamic", test_static_vs_dynamic),
-        ("Cross-Model Consistency", test_cross_model_consistency)
-    ]
-    
-    for test_name, test_func in tests:
-        print(f"\n{'='*20} {test_name} {'='*20}")
-        try:
-            result = test_func(models, sample_size)
-            if 'error' in result:
-                print(f"❌ {test_name} failed: {result['error']}")
-            else:
-                print(f"✅ {test_name} completed!")
-        except Exception as e:
-            print(f"❌ {test_name} failed with error: {e}")
+    test_map = {
+        "tool_vs_direct_vs_simple": test_tool_vs_direct_vs_simple,
+        "route_ablation": test_route_ablation,
+        "static_vs_dynamic": test_static_vs_dynamic,
+        "model_comparison": test_cross_model_consistency
+    }
+
+    if len(sys.argv) > 1:
+        # run test specified in the argument
+        test_name = sys.argv[1]
+        test_func = test_map.get(test_name)
+        if test_func:
+            print(f"\nRunning test: {test_name}")
+            try:
+                result = test_func(models, sample_size)
+                if 'error' in result:
+                    print(f"❌ Test failed: {result['error']}")
+                else:
+                    print("✅ Test completed successfully!")
+            except Exception as e:
+                print(f"❌ Test failed with error: {e}")
+        else:
+            print(f"❌ Unknown test: {test_name}")
+            print(f"Available tests: {list(test_map.keys())}")
+    else:
+        # run all the tests
+        print("Running all tests...")
+        for name, func in test_map.items():
+            print(f"\n{'='*20} {name.replace('_', ' ').title()} {'='*20}")
+            try:
+                result = func(models, sample_size)
+                if 'error' in result:
+                    print(f"❌ {name} failed: {result['error']}")
+                else:
+                    print(f"✅ {name} completed!")
+            except Exception as e:
+                print(f"❌ {name} failed with error: {e}")
     
     print(f"\n🎉 All ablation tests completed!")
     print(f"📁 Results saved in ablation_results/ directory")
