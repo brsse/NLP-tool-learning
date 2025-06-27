@@ -3,7 +3,9 @@
 # ============================================================================
 
 # Route Selection Prompt
-ROUTE_SELECTION_PROMPT = """You are a route selector for a research paper tool learning system.
+ROUTE_SELECTION_PROMPT = """
+
+You are a route selector for a research paper tool learning system.
 
 Available routes:
 - searchPapers: Find research papers on specific topics
@@ -18,6 +20,52 @@ Query: "{query}"
 
 Select the most appropriate route(s). You can select one or multiple routes if the query would benefit from multiple approaches.
 Respond with route names separated by commas (e.g., "searchPapers" or "searchPapers, getAuthorInfo")."""
+
+# Add Prompt Variants 
+ROUTE_SELECTION_PROMPT_SINGLE = """
+
+You are a route selector for a research paper tool learning system.
+
+Available routes:
+- searchPapers: Find research papers on specific topics
+- getAuthorInfo: Get author information and their publications  
+- getCitations: Analyze citations and paper impact
+- getRelatedPapers: Find related research papers
+- comparePapers: Compare different papers or methods
+- trendAnalysis: Analyze research trends over time
+- journalAnalysis: Analyze journals and venues
+
+Query: "{query}"
+
+Select the single most appropriate route for this query.
+**Respond with only the route name, with no extra text, punctuation, or formatting.**
+For example: searchPapers
+"""
+
+ROUTE_SELECTION_PROMPT_FEWSHOT = ROUTE_SELECTION_PROMPT_FEWSHOT = """
+
+You are a route selector for a research paper tool learning system.
+
+Available routes:
+- searchPapers: Find research papers on specific topics
+- getAuthorInfo: Get author information and their publications  
+- getCitations: Analyze citations and paper impact
+- getRelatedPapers: Find related research papers
+- comparePapers: Compare different papers or methods
+- trendAnalysis: Analyze research trends over time
+- journalAnalysis: Analyze journals and venues
+
+Here are some examples:
+- Query: "Who is Geoffrey Hinton?" → getAuthorInfo
+- Query: "Compare CNN and RNN" → comparePapers
+- Query: "Citation count of GPT paper" → getCitations
+
+Query: "{query}"
+
+Select the single most appropriate route for this query.
+**Respond with only the route name, with no extra text, punctuation, or formatting.**
+For example: getCitations
+"""
 
 # Enhanced Response Generation Prompt for Tool Learning Excellence
 RESPONSE_GENERATION_PROMPT = """You are an expert research assistant with multi-route intelligence. Use the selected routes to provide a comprehensive analysis.

@@ -1,0 +1,53 @@
+{
+  "test_name": "Prompt Engineering Ablation",
+  "timestamp": "2025-06-27T19:09:24.074897",
+  "models_tested": [
+    "llama3.2",
+    "deepseek-r1",
+    "mistral:7b-instruct"
+  ],
+  "sample_size": 3,
+  "prompt_variants": [
+    "baseline",
+    "single",
+    "fewshot"
+  ],
+  "prompt_results": {
+    "llama3.2__baseline": {
+      "avg_quality": 0.6831349206349207,
+      "avg_time": 18.54147442181905
+    },
+    "llama3.2__single": {
+      "avg_quality": 0.6326904761904762,
+      "avg_time": 15.54326605796814
+    },
+    "llama3.2__fewshot": {
+      "avg_quality": 0.6737698412698414,
+      "avg_time": 17.747170209884644
+    },
+    "deepseek-r1__baseline": {
+      "avg_quality": 0.7922142857142856,
+      "avg_time": 126.00185529390971
+    },
+    "deepseek-r1__single": {
+      "avg_quality": 0.829095238095238,
+      "avg_time": 107.6269241174062
+    },
+    "deepseek-r1__fewshot": {
+      "avg_quality": 0.7507142857142858,
+      "avg_time": 107.88719431559245
+    },
+    "mistral:7b-instruct__baseline": {
+      "avg_quality": 0.7244047619047619,
+      "avg_time": 27.45493213335673
+    },
+    "mistral:7b-instruct__single": {
+      "avg_quality": 0.6887936507936508,
+      "avg_time": 19.414100249608357
+    },
+    "mistral:7b-instruct__fewshot": {
+      "avg_quality": 0.7037142857142857,
+      "avg_time": 19.58454442024231
+    }
+  }
+}

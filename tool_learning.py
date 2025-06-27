@@ -78,52 +78,99 @@ class ToolLearningSystem:
         else:
             return self._select_route_fallback(query)
     
-    def _select_route_llm(self, query: str) -> Tuple[List[str], float, str]:
-        """Use LLM for multi-route selection"""
-        prompt = get_route_selection_prompt(query)
+    # def _select_route_llm(self, query: str) -> Tuple[List[str], float, str]:
+    #     """Use LLM for multi-route selection"""
+    #     prompt = get_route_selection_prompt(query)
         
-        try:
-            response = requests.post(
-                'http://localhost:11434/api/generate',
-                json={
-                    'model': self.ollama_model,
-                    'prompt': prompt,
-                    'stream': False
-                },
-                timeout=30
-            )
+    #     try:
+    #         response = requests.post(
+    #             'http://localhost:11434/api/generate',
+    #             json={
+    #                 'model': self.ollama_model,
+    #                 'prompt': prompt,
+    #                 'stream': False
+    #             },
+    #             timeout=30
+    #         )
             
-            if response.status_code == 200:
-                result = response.json()
-                selected_text = result['response'].strip()
+    #         if response.status_code == 200:
+    #             result = response.json()
+    #             selected_text = result['response'].strip()
                 
-                # Parse multiple routes and remove duplicates
-                routes = [route.strip() for route in selected_text.split(',')]
-                valid_routes = []
-                seen_routes = set()  # Track already added routes
+    #             # Parse multiple routes and remove duplicates
+    #             routes = [route.strip() for route in selected_text.split(',')]
+    #             valid_routes = []
+    #             seen_routes = set()  # Track already added routes
                 
-                for route in routes:
-                    if route in self.routes and route not in seen_routes:
-                        valid_routes.append(route)
-                        seen_routes.add(route)
-                    elif route not in seen_routes:
-                        # Try to extract valid route
-                        for valid_route in self.routes:
-                            if valid_route.lower() in route.lower() and valid_route not in seen_routes:
-                                valid_routes.append(valid_route)
-                                seen_routes.add(valid_route)
-                                break
+    #             for route in routes:
+    #                 if route in self.routes and route not in seen_routes:
+    #                     valid_routes.append(route)
+    #                     seen_routes.add(route)
+    #                 elif route not in seen_routes:
+    #                     # Try to extract valid route
+    #                     for valid_route in self.routes:
+    #                         if valid_route.lower() in route.lower() and valid_route not in seen_routes:
+    #                             valid_routes.append(valid_route)
+    #                             seen_routes.add(valid_route)
+    #                             break
                 
-                if valid_routes:
-                    confidence = 0.95 if len(valid_routes) == len(set(routes)) else 0.85
-                    return valid_routes, confidence, f"LLM selected {', '.join(valid_routes)} (deduplicated)"
+    #             if valid_routes:
+    #                 confidence = 0.95 if len(valid_routes) == len(set(routes)) else 0.85
+    #                 return valid_routes, confidence, f"LLM selected {', '.join(valid_routes)} (deduplicated)"
                             
-        except Exception as e:
-            logger.warning(f"LLM route selection failed: {e}")
+    #     except Exception as e:
+    #         logger.warning(f"LLM route selection failed: {e}")
         
-        # Fallback if LLM fails
-        return self._select_route_fallback(query)
+    #     # Fallback if LLM fails
+    #     return self._select_route_fallback(query)
     
+    def select_route_with_custom_prompt(self, query: str, custom_prompt: str) -> Tuple[List[str], float, str]:
+        """
+        Select route(s) for a query using a custom route selection prompt (for ablation).
+        """
+        print(f"DEBUG: LLM available? {self.llm_available}") # Added for debug 
+        if self.llm_available:
+            try:
+                response = requests.post(
+                    'http://localhost:11434/api/generate',
+                    json={
+                        'model': self.ollama_model,
+                        'prompt': custom_prompt,
+                        'stream': False
+                    },
+                    timeout=999999
+                )
+
+                if response.status_code == 200:
+                    result = response.json()
+                    selected_text = result['response'].strip()
+                    # Parse multiple routes, as in _select_route_llm
+                    routes = [route.strip() for route in selected_text.split(',')]
+                    valid_routes = []
+                    seen_routes = set()
+
+                    for route in routes:
+                        if route in self.routes and route not in seen_routes:
+                            valid_routes.append(route)
+                            seen_routes.add(route)
+                        elif route not in seen_routes:
+                            for valid_route in self.routes:
+                                if valid_route.lower() in route.lower() and valid_route not in seen_routes:
+                                    valid_routes.append(valid_route)
+                                    seen_routes.add(valid_route)
+                                    break
+
+                    if valid_routes:
+                        confidence = 0.95 if len(valid_routes) == len(set(routes)) else 0.85
+                        return valid_routes, confidence, f"LLM selected {', '.join(valid_routes)} (deduplicated, ablation prompt)"
+            except Exception as e:
+                logger.warning(f"LLM custom prompt route selection failed: {e}")
+                print("⚠️ LLM custom prompt route selection failed: ", e)
+        
+        print("DEBUG: Falling back to keyword/static route selection!")
+        # fallback if LLM fails
+        return self._select_route_fallback(query)
+
     def _select_route_fallback(self, query: str) -> Tuple[List[str], float, str]:
         """Fallback route selection using keywords"""
         query_lower = query.lower()
