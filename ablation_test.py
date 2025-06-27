@@ -587,8 +587,8 @@ def main():
     print("🧪 Comprehensive Ablation Testing Suite")
     print("=" * 45)
     
-    # models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
-    models = ['mistral:7b-instruct']
+    models = ['llama3.2', 'deepseek-r1', 'mistral:7b-instruct']
+    # models = ['mistral:7b-instruct']
 
     sample_size = 3
     
