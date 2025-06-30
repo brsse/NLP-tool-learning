@@ -1,0 +1,110 @@
+{
+  "route_performance": {
+    "searchPapers": {
+      "accuracy": 1.0,
+      "avg_quality": 0.8021571428571429,
+      "avg_papers_found": 10.0,
+      "total_cases": 5,
+      "avg_quality_score": 0.8021571428571429
+    }
+  },
+  "response_quality": {
+    "overall_avg_quality": 0.8021571428571429,
+    "keyword_coverage_avg": 1.0,
+    "expected_answer_alignment_avg": 0.7,
+    "structure_coherence_avg": 0.7142857142857143,
+    "qa_comparison_metrics": {
+      "similarity_scores": [
+        0.05142857142857143,
+        0.059782608695652176,
+        0.03932584269662921,
+        0.05732484076433121,
+        0.060240963855421686
+      ],
+      "keyword_match_scores": [
+        0.5,
+        0.75,
+        0.25,
+        1.0,
+        1.0
+      ],
+      "expected_answer_coverage": 0.0
+    }
+  },
+  "model_analysis": {
+    "model_name": "deepseek-r1",
+    "data_mode": "dynamic",
+    "total_test_cases": 5,
+    "overall_accuracy": 1.0,
+    "performance_metrics": {
+      "avg_response_time": 465.81572675704956,
+      "total_time": 2329.078633785248,
+      "fastest_response": 465.04865741729736,
+      "slowest_response": 468.3594253063202
+    },
+    "quality_benchmarks": {
+      "min_quality": 0.7173571428571428,
+      "max_quality": 0.8701904761904762,
+      "avg_quality": 0.8021571428571429
+    },
+    "error_analysis": {
+      "error_rate": 0.0,
+      "error_details": []
+    }
+  },
+  "difficulty_analysis": {
+    "easy": {
+      "accuracy": 1.0,
+      "avg_quality": 0.7648571428571429,
+      "avg_papers_found": 10.0,
+      "total_cases": 1,
+      "performance_trend": "expected"
+    },
+    "medium": {
+      "accuracy": 1.0,
+      "avg_quality": 0.7919126984126983,
+      "avg_papers_found": 10.0,
+      "total_cases": 3,
+      "performance_trend": "review_needed"
+    },
+    "hard": {
+      "accuracy": 1.0,
+      "avg_quality": 0.8701904761904762,
+      "avg_papers_found": 10.0,
+      "total_cases": 1,
+      "performance_trend": "review_needed"
+    }
+  },
+  "papers_analysis": {
+    "retrieval_metrics": {
+      "total_papers_found": 50,
+      "avg_papers_per_query": 10.0,
+      "max_papers_found": 10,
+      "min_papers_found": 10,
+      "zero_results_rate": 0.0
+    },
+    "relevance_quality": {
+      "papers_by_route": {
+        "searchPapers": 10.0
+      },
+      "papers_by_difficulty": {
+        "easy": 10.0,
+        "medium": 10.0,
+        "hard": 10.0
+      },
+      "expected_vs_actual": {
+        "meeting_expectations": 1.0,
+        "exceeding_expectations": 1.0
+      }
+    }
+  },
+  "summary_metrics": {
+    "sample_size": 5,
+    "overall_success_rate": 1.0,
+    "avg_response_time": 465.81572675704956,
+    "avg_papers_per_query": 10.0,
+    "error_rate": 0.0,
+    "best_performing_route": "searchPapers",
+    "most_challenging_difficulty": "easy"
+  }
+}
